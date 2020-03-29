@@ -21,7 +21,6 @@ const OTF2OTC = "otf2otc";
 const PATEL_C = ["node", "./node_modules/patel/bin/patel-c"];
 const TTCIZE = ["node", "./node_modules/otfcc-ttcize/bin/_startup"];
 const GENERATE = ["node", "gen/generator"];
-const GC = ["node", "gen/gc"];
 const webfontFormats = [
 	["woff2", "woff2"],
 	["woff", "woff"],
@@ -319,8 +318,6 @@ const BuildTTF = file.make(
 			{ hives, family, shapeWeight, menuWeight, menuStyle, menuWidth },
 			version
 		] = await target.need(HivesOf(fn), Version);
-		const otd = output.dir + "/" + output.name + ".otd";
-		const ttfTmp = output.dir + "/" + output.name + ".tmp.ttf";
 		const otdTmp = output.dir + "/" + output.name + ".tmp.otd";
 		const charmap = output.dir + "/" + output.name + ".charmap";
 		await target.need(Scripts, fu`parameters.toml`, de`${output.dir}`);
@@ -336,12 +333,13 @@ const BuildTTF = file.make(
 			["--menu-width", menuWidth],
 			hives
 		);
-		await run("otfccbuild", otdTmp, "-o", ttfTmp, "-O3", "--keep-average-char-width");
-		await run(GC, ["-i", ttfTmp], ["-o", otd]);
-		await run("otfccbuild", otd, "-o", output.full, "-O3", "--keep-average-char-width", "-q");
+		await run(
+			"otfccbuild",
+			otdTmp,
+			["-o", output.full],
+			["-O3", "--keep-average-char-width", "-q"]
+		);
 		await rm(otdTmp);
-		await rm(ttfTmp);
-		await rm(otd);
 	}
 );
 const BuildCM = file.make(
@@ -643,11 +641,18 @@ const ChangeFileList = oracle.make(
 	() => `release:change-file-list`,
 	target => FileList({ under: "changes", pattern: "*.md" })(target)
 );
-const ReleaseNotes = task(`release:release-note`, async target => {
-	const [version] = await target.need(Version, UtilScripts, de(ARCHIVE_DIR));
-	const [changeFiles] = await target.need(ChangeFileList());
-	await target.need(changeFiles.map(fu));
-	await run("node", "utility/generate-release-note/index", version);
+const ReleaseNotesFile = file.make(
+	version => `${ARCHIVE_DIR}/release-notes-${version}.md`,
+	async (t, out, version) => {
+		await t.need(UtilScripts, de(ARCHIVE_DIR));
+		const [changeFiles] = await t.need(ChangeFileList());
+		await t.need(changeFiles.map(fu));
+		await run("node", "utility/generate-release-note/index", version, out.full);
+	}
+);
+const ReleaseNotes = task(`release:release-note`, async t => {
+	const [version] = await t.need(Version);
+	await t.need(ReleaseNotesFile(version));
 });
 
 phony(`clean`, async () => {
