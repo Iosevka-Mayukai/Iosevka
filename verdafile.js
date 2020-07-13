@@ -4,7 +4,7 @@ const fs = require("fs");
 const build = require("verda").create();
 const { task, file, oracle, computed, phony } = build.ruleTypes;
 const { de, fu, sfu, ofu } = build.rules;
-const { run, node, cd, cp, rm, fail, echo } = build.actions;
+const { run, node, cd, cp, rm, mv, fail, echo } = build.actions;
 const { FileList } = build.predefinedFuncs;
 const which = require("which");
 
@@ -13,7 +13,7 @@ module.exports = build;
 ///////////////////////////////////////////////////////////
 
 const path = require("path");
-const toml = require("toml");
+const toml = require("@iarna/toml");
 
 const BUILD = "build";
 const DIST = "dist";
@@ -92,6 +92,10 @@ const OptimizeWithTtx = computed("metadata:optimize-with-ttx", async target => {
 	const [hasTtx, rp] = await target.need(HasTtx, RawPlans);
 	return hasTtx && !!rp.buildOptions.optimizeWithTtx;
 });
+const OptimizeWithFilter = computed("metadata:optimize-with-filter", async target => {
+	const [rp] = await target.need(RawPlans);
+	return rp.buildOptions.optimizeWithFilter;
+});
 const RawCollectPlans = computed("metadata:raw-collect-plans", async target => {
 	const [rp] = await target.need(RawPlans);
 	return rp.collectPlans;
@@ -117,14 +121,17 @@ const BuildPlans = computed("metadata:build-plans", async target => {
 	const fileNameToBpMap = {};
 	for (const prefix in rawBuildPlans) {
 		const bp = { ...rawBuildPlans[prefix] };
-		shimBuildPlans(bp, rp.weights, rp.slants, rp.widths);
+		validateAndShimBuildPlans(prefix, bp, rp.weights, rp.slopes, rp.widths);
 
 		bp.targets = [];
-		const suffixMapping = getSuffixMapping(bp.weights, bp.slants, bp.widths);
+		const weights = bp.weights,
+			slopes = bp.slopes,
+			widths = bp.widths;
+		const suffixMapping = getSuffixMapping(weights, slopes, widths);
 		for (const suffix in suffixMapping) {
 			const sfi = suffixMapping[suffix];
-			if (bp.weights && !bp.weights[sfi.weight]) continue;
-			if (bp.slants && !bp.slants[sfi.slant]) continue;
+			if (weights && !weights[sfi.weight]) continue;
+			if (slopes && !slopes[sfi.slope]) continue;
 			const fileName = [prefix, suffix].join("-");
 			bp.targets.push(fileName);
 			fileNameToBpMap[fileName] = { prefix, suffix };
@@ -134,7 +141,17 @@ const BuildPlans = computed("metadata:build-plans", async target => {
 	return { fileNameToBpMap, buildPlans: returnBuildPlans };
 });
 
-function shimBuildPlans(bp, dWeights, dSlants, dWidths) {
+function validateAndShimBuildPlans(prefix, bp, dWeights, dSlopes, dWidths) {
+	if (!bp.family) {
+		fail(`Build plan for ${prefix} does not have a family name. Exit.`);
+	}
+	if (!bp.slopes && bp.slants) {
+		echo.warn(
+			`Build plan for ${prefix} uses legacy "slants" to define slopes. ` +
+				`Use "slopes" instead.`
+		);
+	}
+
 	if (!bp.pre) bp.pre = {};
 	if (!bp.post) bp.post = {};
 
@@ -149,7 +166,7 @@ function shimBuildPlans(bp, dWeights, dSlants, dWidths) {
 	if (!bp.post.italic) bp.post.italic = [];
 
 	bp.weights = bp.weights || dWeights;
-	bp.slants = bp.slants || dSlants;
+	bp.slopes = bp.slopes || bp.slants || dSlopes;
 	bp.widths = bp.widths || dWidths;
 }
 
@@ -175,23 +192,29 @@ const FontInfoOf = computed.group("metadata:font-info-of", async (target, fileNa
 	const bp = buildPlans[fi0.prefix];
 	if (!bp) fail(`Build plan for '${fileName}' not found.` + whyBuildPlanIsnNotThere(fileName));
 
-	const sfi = getSuffixMapping(bp.weights, bp.slants, bp.widths)[fi0.suffix];
-	const preHives = [...bp.pre.design, ...bp.pre[sfi.slant]];
-	const postHives = [...bp.post.design, ...bp.post[sfi.slant]];
+	const sfi = getSuffixMapping(bp.weights, bp.slopes, bp.widths)[fi0.suffix];
+	const preHives = [...bp.pre.design, ...bp.pre[sfi.slope]];
+
 	return {
 		name: fileName,
-		hives: ["iosevka", ...preHives, ...sfi.hives, ...postHives],
+		// Hives
+		preHives,
+		// Shape
 		shape: {
 			weight: sfi.shapeWeight,
-			width: sfi.shapeWidth
+			slope: sfi.slope,
+			width: sfi.shapeWidth,
+			quasiProportionalDiversity: bp["quasiProportionalDiversity"] || 0
 		},
+		// Menu
 		menu: {
 			family: bp.family,
 			version: version,
 			width: sfi.menuWidth,
-			slant: sfi.menuSlant,
+			slope: sfi.menuSlope,
 			weight: sfi.menuWeight
 		},
+		// CSS
 		css: {
 			weight: sfi.cssWeight,
 			stretch: sfi.cssStretch,
@@ -204,27 +227,31 @@ const FontInfoOf = computed.group("metadata:font-info-of", async (target, fileNa
 	};
 });
 
-function getSuffixMapping(weights, slants, widths) {
+function getSuffixMapping(weights, slopes, widths) {
 	const mapping = {};
 	for (const w in weights) {
 		validateRecommendedWeight(w, weights[w].menu, "Menu");
 		validateRecommendedWeight(w, weights[w].css, "CSS");
-		for (const s in slants) {
+		for (const s in slopes) {
 			for (const wd in widths) {
 				const suffix = makeSuffix(w, wd, s, "regular");
 				mapping[suffix] = {
-					hives: [`shapeWeight`, `s-${s}`, `wd-${widths[wd].shape}`],
 					weight: w,
 					shapeWeight: nValidate("Shape weight of " + w, weights[w].shape, vlShapeWeight),
 					cssWeight: nValidate("CSS weight of " + w, weights[w].css, vlCssWeight),
 					menuWeight: nValidate("Menu weight of " + w, weights[w].menu, vlMenuWeight),
 					width: wd,
-					shapeWidth: nValidate("Shape width of " + wd, widths[wd].shape, vlShapeWidth),
+					shapeWidth: nValidate(
+						"Shape width of " + wd,
+						widths[wd].shape,
+						vlShapeWidth,
+						fixShapeWidth
+					),
 					cssStretch: widths[wd].css || wd,
 					menuWidth: nValidate("Menu width of " + wd, widths[wd].menu, vlMenuWidth),
-					slant: s,
-					cssStyle: slants[s] || s,
-					menuSlant: slants[s] || s
+					slope: s,
+					cssStyle: slopes[s] || s,
+					menuSlope: slopes[s] || s
 				};
 			}
 		}
@@ -248,9 +275,10 @@ function validateRecommendedWeight(w, value, label) {
 	}
 }
 
-function nValidate(key, v, f) {
+function nValidate(key, v, f, ft) {
+	if (ft) v = ft(v);
 	if (typeof v !== "number" || !isFinite(v) || (f && !f(v))) {
-		throw new TypeError(`${key} = "${v}" is not a valid number.`);
+		throw new TypeError(`${key} = ${v} is not a valid number.`);
 	}
 	return v;
 }
@@ -263,8 +291,23 @@ function vlCssWeight(x) {
 function vlMenuWeight(x) {
 	return vlCssWeight(x);
 }
+const g_widthFixupMemory = new Map();
+function fixShapeWidth(x) {
+	if (x >= 3 && x <= 9) {
+		if (g_widthFixupMemory.has(x)) return g_widthFixupMemory.get(x);
+		const xCorrected = Math.round(500 * Math.pow(Math.sqrt(576 / 500), x - 5));
+		echo.warn(
+			`The build plan is using legacy width grade ${x}. ` +
+				`Converting to unit width ${xCorrected}.`
+		);
+		g_widthFixupMemory.set(x, xCorrected);
+		return xCorrected;
+	} else {
+		return x;
+	}
+}
 function vlShapeWidth(x) {
-	return x >= 3 && x <= 9 && x % 1 === 0;
+	return x >= 433 && x <= 665;
 }
 function vlMenuWidth(x) {
 	return x >= 1 && x <= 9 && x % 1 === 0;
@@ -305,11 +348,12 @@ const CollectPlans = computed(`metadata:collect-plans`, async target => {
 
 const StandardSuffixes = computed(`metadata:standard-suffixes`, async target => {
 	const [rp] = await target.need(RawPlans);
-	return getSuffixMapping(rp.weights, rp.slants, rp.widths);
+	return getSuffixMapping(rp.weights, rp.slopes, rp.widths);
 });
 
 async function getCollectPlans(target, rawCollectPlans, suffixMapping, config, fnFileName) {
-	const ttcComposition = {},
+	const glyfTtcComposition = {},
+		ttcComposition = {},
 		ttcContents = {},
 		groupDecomposition = {};
 	for (const collectPrefix in rawCollectPlans) {
@@ -321,68 +365,88 @@ async function getCollectPlans(target, rawCollectPlans, suffixMapping, config, f
 			const [gri] = await target.need(BuildPlanOf(prefix));
 			const ttfFileNameSet = new Set(gri.targets);
 			for (const suffix in suffixMapping) {
-				const gr = suffixMapping[suffix];
+				const sfi = suffixMapping[suffix];
 				const ttcFileName = fnFileName(
 					config,
 					collectPrefix,
-					gr.weight,
-					gr.width,
-					gr.slant
+					sfi.weight,
+					sfi.width,
+					sfi.slope
 				);
-				const ttfTargetName = `${prefix}-${suffix}`;
+				const glyfTtcFileName = fnFileName(
+					{ ...config, distinguishWidths: true },
+					collectPrefix,
+					sfi.weight,
+					sfi.width,
+					sfi.slope
+				);
 
+				const ttfTargetName = `${prefix}-${suffix}`;
 				if (!ttfFileNameSet.has(ttfTargetName)) continue;
+
+				if (!glyfTtcComposition[glyfTtcFileName]) glyfTtcComposition[glyfTtcFileName] = [];
+				glyfTtcComposition[glyfTtcFileName].push({ dir: prefix, file: ttfTargetName });
 				if (!ttcComposition[ttcFileName]) ttcComposition[ttcFileName] = [];
-				ttcComposition[ttcFileName].push({ dir: prefix, file: ttfTargetName });
+				ttcComposition[ttcFileName].push(glyfTtcFileName);
+
 				groupFileList.add(ttcFileName);
 			}
 		}
 		ttcContents[collectPrefix] = [...groupFileList];
 		groupDecomposition[collectPrefix] = [...collect.from];
 	}
-	return { ttcComposition, ttcContents, groupDecomposition };
+	return { glyfTtcComposition, ttcComposition, ttcContents, groupDecomposition };
 }
 function fnStandardTtc(collectConfig, prefix, w, wd, s) {
 	const ttcSuffix = makeSuffix(
 		collectConfig.distinguishWeights ? w : "regular",
 		collectConfig.distinguishWidths ? wd : "normal",
-		collectConfig.distinguishSlant ? s : "upright",
+		collectConfig.distinguishSlope ? s : "upright",
 		"regular"
 	);
 	return `${prefix}-${ttcSuffix}`;
 }
 
-const CollectionPartsOf = computed.group("metadata:collection-parts-of", async (target, id) => {
-	const [{ ttcComposition }] = await target.need(CollectPlans);
-	return ttcComposition[id];
-});
-
 ///////////////////////////////////////////////////////////
 //////                Font Building                  //////
 ///////////////////////////////////////////////////////////
 
+const BuildRawTtf = file.make(
+	(gr, fn) => `${BUILD}/${gr}/${fn}.raw.ttf`,
+	async (target, output, gr, fn) => {
+		const [fi] = await target.need(FontInfoOf(fn), Version);
+		const charmap = output.dir + "/" + fn + ".charmap";
+		await target.need(Scripts, Parameters, de`${output.dir}`);
+		const otdPath = `${output.dir}/${output.name}.otd`;
+		await node("font-src/index", { o: otdPath, oCharMap: charmap, ...fi });
+		await optimizedOtfcc(otdPath, output.full);
+		await rm(otdPath);
+	}
+);
+
 const BuildTTF = file.make(
 	(gr, fn) => `${BUILD}/${gr}/${fn}.ttf`,
 	async (target, output, gr, fn) => {
-		const [fi, useTtx] = await target.need(FontInfoOf(fn), OptimizeWithTtx, Version);
-		const charmap = output.dir + "/" + output.name + ".charmap";
-		await target.need(Scripts, Parameters, de`${output.dir}`);
-
-		const otdPath = `${output.dir}/${output.name}.otd`;
-		await node("gen/index", { o: otdPath, oCharMap: charmap, ...fi });
-		if (useTtx) {
-			const tempOtfPath = `${output.dir}/${output.name}.temp.otf`;
+		const [useFilter, useTtx] = await target.need(
+			OptimizeWithFilter,
+			OptimizeWithTtx,
+			de`${output.dir}`
+		);
+		await target.needed(FontInfoOf(fn), Version, Scripts, Parameters);
+		const [rawTtf] = await target.order(BuildRawTtf(gr, fn));
+		if (useFilter) {
+			const filterArgs = useFilter.split(/ +/g);
+			await run(filterArgs, rawTtf.full, output.full);
+			await rm(rawTtf.full);
+		} else if (useTtx) {
 			const ttxPath = `${output.dir}/${output.name}.temp.ttx`;
-
-			await optimizedOtfcc(otdPath, tempOtfPath);
-			await run(TTX, "-q", ["-o", ttxPath], tempOtfPath);
+			await run(TTX, "-q", ["-o", ttxPath], rawTtf.full);
+			await rm(rawTtf.full);
 			await run(TTX, "-q", ["-o", output.full], ttxPath);
-			await rm(tempOtfPath);
 			await rm(ttxPath);
 		} else {
-			await optimizedOtfcc(otdPath, output.full);
+			await mv(rawTtf.full, output.full);
 		}
-		await rm(otdPath);
 	}
 );
 
@@ -464,42 +528,48 @@ const DistWebFontCSS = file.make(
 	}
 );
 
-const GroupContents = task.group("contents", async (target, gid) => {
-	await target.need(GroupFonts(gid), DistWebFontCSS(gid));
-	return gid;
+const GroupContents = task.group("contents", async (target, gr) => {
+	await target.need(GroupFonts(gr), DistWebFontCSS(gr));
+	return gr;
 });
 
 // TTC
-const ExportTtcSet = task.group("collection-fonts", async (target, cid) => {
-	const [{ ttcContents }] = await target.need(CollectPlans);
-	const [files] = await target.need(ttcContents[cid].map(file => ExportTtc(cid, file)));
-	return files;
-});
-const ExportSuperTtc = file.make(
-	f => `${DIST}/super-ttc/${f}.ttc`,
-	async (target, out, f) => {
-		await target.need(de(out.dir));
-		const [inputs] = await target.need(ExportTtcSet(f));
-		await run(
-			OTF2OTC,
-			["-o", out.full],
-			inputs.map(f => f.full)
-		);
-	}
-);
 const ExportTtc = file.make(
 	(gr, f) => `${DIST}/export/${gr}/ttc/${f}.ttc`,
 	async (target, out, gr, f) => {
-		const [parts] = await target.need(CollectionPartsOf(f));
-		await buildTtcForFile(target, parts, out);
+		const [cp] = await target.need(CollectPlans, de`${out.dir}`);
+		const parts = Array.from(new Set(cp.ttcComposition[f]));
+		const [inputs] = await target.need(parts.map(pt => glyfTtc(gr, pt)));
+		await buildCompositeTtc(out, inputs);
 	}
 );
-async function buildTtcForFile(target, parts, out) {
-	const [useTtx] = await target.need(OptimizeWithTtx, de`${out.dir}`);
+const glyfTtc = file.make(
+	(gr, f) => `${BUILD}/glyf-ttc/${gr}/${f}.ttc`,
+	async (target, out, gr, f) => {
+		const [cp] = await target.need(CollectPlans);
+		const parts = cp.glyfTtcComposition[f];
+		await buildGlyfTtc(target, parts, out);
+	}
+);
+
+async function buildCompositeTtc(out, inputs) {
+	await run(
+		OTF2OTC,
+		["-o", out.full],
+		inputs.map(f => f.full)
+	);
+}
+async function buildGlyfTtc(target, parts, out) {
+	const [useFilter, useTtx] = await target.need(
+		OptimizeWithFilter,
+		OptimizeWithTtx,
+		de`${out.dir}`
+	);
 	const [ttfInputs] = await target.need(parts.map(part => BuildTTF(part.dir, part.file)));
 	const tmpTtc = `${out.dir}/${out.name}.unhinted.ttc`;
 	const ttfInputPaths = ttfInputs.map(p => p.full);
-	await run(TTCIZE, ttfInputPaths, ["-o", tmpTtc], useTtx ? "--ttx-loop" : null);
+	const optimization = useFilter ? ["--filter-loop", useFilter] : useTtx ? ["--ttx-loop"] : [];
+	await run(TTCIZE, optimization, ["-o", tmpTtc], ttfInputPaths);
 	await run("ttfautohint", tmpTtc, out.full);
 	await rm(tmpTtc);
 }
@@ -507,15 +577,24 @@ async function buildTtcForFile(target, parts, out) {
 // Collection Export
 const CollectionExport = task.group("collection-export", async (target, gr) => {
 	// Note: this target does NOT depend on the font files.
-	const [collectPlans] = await target.need(CollectPlans);
+	const [collectPlans] = await target.need(CollectPlans, de`${DIST}/export/${gr}`);
 	const sourceGroups = collectPlans.groupDecomposition[gr];
-	await target.need(
-		de`${DIST}/export/${gr}`,
-		sourceGroups.map(g => GroupContents(g)),
-		ExportTtcSet(gr)
-	);
+	// TTF, etc
+	await target.need(sourceGroups.map(g => GroupContents(g)));
 	for (const g of sourceGroups) await cp(`${DIST}/${g}`, `${DIST}/export/${gr}`);
+	// TTC
+	const ttcFiles = Array.from(new Set(collectPlans.ttcContents[gr]));
+	await target.need(ttcFiles.map(pt => ExportTtc(gr, pt)));
 });
+const ExportSuperTtc = file.make(
+	gr => `${DIST}/super-ttc/${gr}.ttc`,
+	async (target, out, gr) => {
+		const [cp] = await target.need(CollectPlans, de(out.dir));
+		const parts = Array.from(new Set(cp.ttcContents[gr]));
+		const [inputs] = await target.need(parts.map(pt => ExportTtc(gr, pt)));
+		await buildCompositeTtc(out, inputs);
+	}
+);
 const CollectionArchiveFile = file.make(
 	(gr, version) => `${ARCHIVE_DIR}/${COLLECTION_EXPORT_PREFIX}-${gr}-${version}.zip`,
 	async (target, out, gr) => {
@@ -771,21 +850,15 @@ const UtilScriptFiles = computed("util-script-files", async target => {
 	return [...js, ...ejs, ...md];
 });
 const ScriptFiles = computed.group("script-files", async (target, ext) => {
-	const ss = await target.need(
-		ScriptsUnder(ext, `gen`),
-		ScriptsUnder(ext, `glyphs`),
-		ScriptsUnder(ext, `meta`),
-		ScriptsUnder(ext, `otl`),
-		ScriptsUnder(ext, `support`)
-	);
-	return ss.reduce((a, b) => [...a, ...b]);
+	const [ss] = await target.need(ScriptsUnder(ext, `font-src`));
+	return ss;
 });
 const JavaScriptFromPtl = computed("scripts-js-from-ptl", async target => {
 	const [ptl] = await target.need(ScriptFiles("ptl"));
 	return ptl.map(x => x.replace(/\.ptl$/g, ".js"));
 });
 
-const ScriptJS = file.glob(`{gen|glyphs|meta|otl|support}/**/*.js`, async (target, path) => {
+const ScriptJS = file.glob(`font-src/**/*.js`, async (target, path) => {
 	const [jsFromPtl] = await target.need(JavaScriptFromPtl);
 	if (jsFromPtl.indexOf(path.full) >= 0) {
 		const ptl = path.full.replace(/\.js$/g, ".ptl");
@@ -812,6 +885,8 @@ const UtilScripts = task("util-scripts", async target => {
 const Parameters = task(`meta:parameters`, async target => {
 	await target.need(
 		sfu`params/parameters.toml`,
+		sfu`params/shape-weight.toml`,
+		sfu`params/shape-width.toml`,
 		ofu`params/private-parameters.toml`,
 		sfu`params/variants.toml`,
 		sfu`params/ligation-set.toml`
