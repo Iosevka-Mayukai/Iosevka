@@ -57,10 +57,9 @@ Iosevka supports Language-Specific Ligations, which is the ligation set enabled 
 
 To build Iosevka you should:
 
-1. Ensure that [`nodejs`](http://nodejs.org) (≥ 12.16.0), [`ttfautohint`](http://www.freetype.org/ttfautohint/), [`otfcc`](https://github.com/caryll/otfcc) (≥ 0.10.3-alpha) and `otf2otc` are present.
+1. Ensure that [`nodejs`](http://nodejs.org) (≥ 12.16.0), [`ttfautohint`](http://www.freetype.org/ttfautohint/), [`otfcc`](https://github.com/caryll/otfcc) (≥ 0.10.3-alpha) and [`otf2otc`](https://github.com/adobe-type-tools/afdko) are present.
 2. Install necessary libs by `npm install`. If you’ve installed them, upgrade to the latest.
 3. `npm run build -- contents::iosevka`.
-
 
 You will find TTFs, as well as WOFF(2) web fonts and one Webfont CSS in the `dist/` directory.
 
@@ -195,7 +194,7 @@ Since version 2.0, Iosevka would no longer support building via `makefile`. To i
 		
 	
 	<!-- END Section-Private-Build-Plan-Sample -->
-																																																																																														
+																																																																																																
 	
 3. Run `npm run build -- contents::<your plan name>` and the built fonts would be avaliable in `dist/`. Aside from `contents::<plan>`, other options are:
 
@@ -223,6 +222,10 @@ The current available styles for `design`/`upright`/`italic`/`oblique` options a
 	- Remove `NWID` and `WWID` OpenType feature.
 	- Recommended for Linux users who customize for their terminal fonts: certain applications, including FontConfig, recognizes a font as monospace if and only if its every non-combining glyphs having the same width.
   - `sp-fixed` : Apply `sp-force-monospace` and `no-ligation` together.
+
+* Style for controlling digits' (figures') style:
+  - `default-to-old-style-figures`, `default-to-old-style-digits`: Default digit figures to old-style.
+  - `default-to-lining-figures`, `default-to-lining-digits`: Default digit figures to lining.
 
 <!-- BEGIN Section-Cherry-Picking-Predefined -->
 <!-- THIS SECTION IS AUTOMATICALLY GENERATED. DO NOT EDIT. -->
