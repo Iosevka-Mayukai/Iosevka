@@ -1,3 +1,5 @@
+"use strict";
+
 const { app, BrowserWindow } = require("electron");
 let argDir = process.argv[2];
 let fs = require("fs");
@@ -111,12 +113,9 @@ app.on("ready", function () {
 		//x: 5000, y: 5000,
 		webPreferences: {
 			zoomFactor: zoom,
-			nodeIntegration: true
-		},
-		show: false
+			nodeIntegration: true,
+			backgroundThrottling: false
+		}
 	});
-	mainWindow.showInactive();
 	mainWindow.loadURL("file://" + __dirname + "/index.html");
-	mainWindow.blurWebView();
-	//mainWindow.hide();
 });
