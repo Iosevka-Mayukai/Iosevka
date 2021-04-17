@@ -23,12 +23,11 @@ glyph-block Symbol-Currency : begin
 				curl (Middle + radius * [Math.sqrt 2] * [Math.cos angle]) (SymbolMid + radius * [Math.sqrt 2] * [Math.sin angle])
 
 	define [SterlineBaseShape] : glyph-proc
-		local barLeft : mix SB RightSB 0.2
-		local hookEndX : Math.max (barLeft + Stroke * 2.5) [mix SB RightSB 0.95]
+		local barLeft : [mix SB RightSB 0.2] - Stroke * 0.1
+		local hookEndX : Math.max (barLeft + Stroke * 2.25 * HVContrast) [mix SB RightSB 0.95]
 		include : union
 			dispiro
-				widths.lhs
-				g4 hookEndX (CAP - Hook * 0.85)
+				g4 hookEndX (CAP - Hook * 0.85) [widths.lhs]
 				hookstart (CAP - O) (tight -- true)
 				flat barLeft [CAP - SmoothA * 0.75]
 				curl barLeft [mix Stroke CAP 0.3]
@@ -47,10 +46,10 @@ glyph-block Symbol-Currency : begin
 		include : HOverlayBar [mix SB RightSB 0.05] [mix SB RightSB 0.7] (CAP * 0.63)
 
 glyph-block Symbol-Letter : begin
-
 	glyph-block-import CommonShapes
 	glyph-block-import Common-Derivatives
 	glyph-block-import Letter-Latin-X : XStrand
+	glyph-block-import Symbol-Geometric-Shared : UnicodeWeightGrade
 
 	alias 'Ohm' 0x2126 'grek/Omega'
 	turned 'Mho' 0x2127 'Ohm' Middle (CAP / 2)
@@ -133,3 +132,11 @@ glyph-block Symbol-Letter : begin
 			flat turnX [Math.min (CAP - Stroke * 1.5) [mix 0 CAP pY]]
 			curl turnX 0
 		include : HBarBottom SB RightSB 0
+
+	create-glyph 'informationSource' 0x2139 : glyph-proc
+		local sw : UnicodeWeightGrade 9 1
+		include : VBar Middle 0 XH sw
+		include : LeftwardTopSerif     (Middle - sw / 2 * HVContrast) XH (LongJut / 2)
+		include : LeftwardBottomSerif  (Middle - sw / 2 * HVContrast) 0  (LongJut / 2)
+		include : RightwardBottomSerif (Middle + sw / 2 * HVContrast) 0  (LongJut / 2)
+		include : DotAt Middle (XH + Accent) (DotRadius * sw / Stroke)

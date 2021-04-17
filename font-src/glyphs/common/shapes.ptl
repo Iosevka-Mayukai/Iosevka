@@ -355,40 +355,34 @@ glyph-block CommonShapes : begin
 
 	define sideSerifK 0.5
 	define [JutIn left right] : Math.min Jut (HalfStroke + [Math.max (Stroke * TanSlope) ((right - left - Stroke * 2 * HVContrast) * 0.4)])
-	define [AIVSerifs top _left _right] : glyph-proc
+	define [NeedSlab level p] : if level p [glyph-proc]
+	define [NeedNotItalic p] : if para.isItalic [glyph-proc] p
+	define [VSerifs top _left _right] : glyph-proc
 		local left : fallback _left SB
 		local right : fallback _right RightSB
 		local jutIn : JutIn left right
-		if SLAB : begin
-			include : tagged 'serifLT' : CenterTopSerifAsymmetric (left + Stroke * sideSerifK * HVContrast) top Jut jutIn
-			include : tagged 'serifRT' : CenterTopSerifAsymmetric (right - Stroke * sideSerifK * HVContrast) top jutIn Jut
-	define [AIHSerifs top _left _right] : glyph-proc
+		include : tagged 'serifLT' : CenterTopSerifAsymmetric (left + Stroke * sideSerifK * HVContrast) top Jut jutIn
+		include : tagged 'serifRT' : CenterTopSerifAsymmetric (right - Stroke * sideSerifK * HVContrast) top jutIn Jut
+
+	define [HSerifs top _left _right] : glyph-proc
 		local left : fallback _left SB
 		local right : fallback _right RightSB
 		local jutIn : JutIn left right
-		if SLAB : begin
-			include : AIVSerifs top _left _right
-			include : tagged 'serifLB'
-				CenterBottomSerifAsymmetric (left + Stroke * sideSerifK * HVContrast) 0 Jut jutIn
-			include : tagged 'serifRB'
-				CenterBottomSerifAsymmetric (right - Stroke * sideSerifK * HVContrast) 0 jutIn Jut
-	define [AICyrISerifs top _left _right] : glyph-proc
+		include : VSerifs top _left _right
+		include : tagged 'serifLB'
+			CenterBottomSerifAsymmetric (left + Stroke * sideSerifK * HVContrast) 0 Jut jutIn
+		include : tagged 'serifRB'
+			CenterBottomSerifAsymmetric (right - Stroke * sideSerifK * HVContrast) 0 jutIn Jut
+
+	define [CyrISerifs top _left _right] : glyph-proc
 		local left : fallback _left SB
 		local right : fallback _right RightSB
-		if SLAB : begin
-			include : LeftwardBottomSerif left 0 SideJut
-			include : RightwardTopSerif right top SideJut
-			include : CenterTopSerif (left + Stroke * sideSerifK * HVContrast) top Jut
-			include : tagged 'serifRB'
-				CenterBottomSerif (right - Stroke * sideSerifK * HVContrast) 0 Jut
-	define [AIMSerifs top _left _right] : glyph-proc
-		local left : fallback _left SB
-		local right : fallback _right RightSB
-		if SLAB : begin
-			include : LeftwardTopSerif (left + Stroke * (sideSerifK - 0.5) * HVContrast) top SideJut
-			include : RightwardTopSerif (right - Stroke * (sideSerifK - 0.5) * HVContrast) top SideJut
-			include : CenterBottomSerif (left + Stroke * sideSerifK * HVContrast) 0 Jut
-			include : CenterBottomSerif (right - Stroke * sideSerifK * HVContrast) 0 Jut
+		include : LeftwardBottomSerif left 0 SideJut
+		include : RightwardTopSerif right top SideJut
+		include : CenterTopSerif (left + Stroke * sideSerifK * HVContrast) top Jut
+		include : tagged 'serifRB'
+			CenterBottomSerif (right - Stroke * sideSerifK * HVContrast) 0 Jut
+
 	define [WithAIHSerifsMask top bottom left right s] : if [not SLAB] s : begin
 		local leftCenter : left + HalfStroke * HVContrast
 		local rightCenter : right - HalfStroke * HVContrast
@@ -607,14 +601,9 @@ glyph-block CommonShapes : begin
 		include : Italify
 	define ScaleAround FlipAround
 
-	define [Realign x y sx sy] : glyph-proc
-		include : Upright
-		include : Translate (-x) (-y)
-		include : Translate sx sy
-		include : Italify
+	define [Realign x y sx sy] : ApparentTranslate (sx - x) (sy - y)
 
-	define [ForceUpright] : glyph-proc
-		set this.gizmo : Translate 0 0
+	define [ForceUpright] : glyph-proc [set this.gizmo : Translate 0 0]
 
 	define [CreateWaveShape dist sw _phaesShift] : begin
 		define WaveResolution 64
@@ -676,4 +665,4 @@ glyph-block CommonShapes : begin
 		corner [mix x1 x2 (-k)]  [mix y1 y2 (-k)]
 		corner [mix x1 x2 (1+k)] [mix y1 y2 (1+k)]
 
-	glyph-block-export Rect SquareAt Ring RingAt DotAt RingStroke RingStrokeAt DotStrokeAt CircleRing CircleRingAt CircleDotAt OShape OShapeOutline OBarLeftShape OBarRightShape LeftwardTopSerif LeftwardBottomSerif RightwardTopSerif RightwardBottomSerif CenterTopSerif CenterBottomSerif DownwardRightSerif UpwardRightSerif DownwardLeftSerif UpwardLeftSerif AIVSerifs AIHSerifs AICyrISerifs AIMSerifs HBar HBarTop HBarBottom HOverlayBar VBar VBarLeft VBarRight VerticalHook LegShape LeftHook HooktopLeftBar FlatSlashShape hookstart hookend CyrDescender CyrLeftDescender FlipAround ScaleAround Realign ForceUpright DiagCor CreateWaveShape NameUni PointingTo WithAIHSerifsMask WithTransform clear-anchors OBarLeftToothlessShape OBarLeftRoundedShape OBarRightToothlessShape OBarRightRoundedShape AsRadical ExtLineCenter DiagCorDs HCrossBar VERY-FAR MaskAbove MaskBelow MaskLeft MaskRight
+	glyph-block-export Rect SquareAt Ring RingAt DotAt RingStroke RingStrokeAt DotStrokeAt CircleRing CircleRingAt CircleDotAt OShape OShapeOutline OBarLeftShape OBarRightShape LeftwardTopSerif LeftwardBottomSerif RightwardTopSerif RightwardBottomSerif CenterTopSerif CenterBottomSerif DownwardRightSerif UpwardRightSerif DownwardLeftSerif UpwardLeftSerif NeedSlab NeedNotItalic VSerifs HSerifs CyrISerifs HBar HBarTop HBarBottom HOverlayBar VBar VBarLeft VBarRight VerticalHook LegShape LeftHook HooktopLeftBar FlatSlashShape hookstart hookend CyrDescender CyrLeftDescender FlipAround ScaleAround Realign ForceUpright DiagCor CreateWaveShape NameUni PointingTo WithAIHSerifsMask WithTransform clear-anchors OBarLeftToothlessShape OBarLeftRoundedShape OBarRightToothlessShape OBarRightRoundedShape AsRadical ExtLineCenter DiagCorDs HCrossBar VERY-FAR MaskAbove MaskBelow MaskLeft MaskRight

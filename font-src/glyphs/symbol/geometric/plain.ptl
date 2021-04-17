@@ -47,7 +47,7 @@ glyph-block Symbol-Geometric-Plain : for-width-kinds WideWidth1
 			begin 0
 		local outlines : glyph-proc : begin
 			set this.gizmo : Translate 0 0
-			foreach c [items-of sh.contours] : foreach j [range 0 c.length] : begin
+			foreach c [items-of : sh.geometry.asContours] : foreach j [range 0 c.length] : begin
 				local a c.[if j (j - 1) (c.length - 1)]
 				local b c.(j)
 				include : dispiro
@@ -505,6 +505,10 @@ glyph-block Symbol-Geometric-Plain : for-width-kinds WideWidth1
 		StdBlackShape [RegularPolygonFill 6  1  1.05 0.5] 'hBlackHexagon' 0x2B23
 		StdBlackShape [RegularPolygonFill 8  1  1.05 0] 'blackHorizontalOctagon' 0x2BC3
 		StdBlackShape [RegularPolygonFill 8  1  1.05 0.128] 'blackOctagon' 0x2BC4
+
+		ConvexWhitePolygon [RegularPolygonFill 3 1 1 1] 'whiteEqualTriangleDown' null
+		StdBlackShape      [RegularPolygonFill 4 1 1 0.5] 'blackMediumEqualDiamond' null
+		ConvexWhitePolygon [RegularPolygonFill 4 1 1 0.5] 'whiteMediumEqualDiamond' null
 
 		define [PentagramSw c] {.sw ([AdviceStroke c : Math.sqrt Geom.Scalar] * [Math.sqrt 5])}
 		StdBlackShape [RegularPolygonFill 5  2  1.1  0] 'blackStar' 0x2605

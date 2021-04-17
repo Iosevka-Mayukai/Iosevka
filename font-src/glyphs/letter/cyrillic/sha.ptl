@@ -23,7 +23,7 @@ glyph-block Letter-Cyrillic-Sha : begin
 			include : tagged 'serifRB' : RightwardBottomSerif df.rightSB 0 SideJut
 
 			local jut : Jut * df.mvs / Stroke + O
-			if (df.width > jut * 7) : begin
+			if (df.width > 7 * para.refJut) : begin
 				include : tagged 'serifLT'
 					CenterTopSerif (df.leftSB + 0.5 * df.mvs * HVContrast) top jut df.mvs
 				include : tagged 'serifMT'
@@ -49,6 +49,7 @@ glyph-block Letter-Cyrillic-Sha : begin
 	turned 'cyrl/sha.italic.toothed' null 'm.normal' [DivFrame para.diversityM 3].middle (XH / 2)
 	create-glyph 'cyrl/sha.italic.tailed' : glyph-proc
 		local df : DivFrame para.diversityM 3
+		set-width df.width
 		include [refer-glyph 'm.normal'] AS_BASE
 		eject-contour 'barL'
 		eject-contour 'serifLT'
@@ -58,11 +59,18 @@ glyph-block Letter-Cyrillic-Sha : begin
 	turned 'cyrl/sha.italic.motionSerifed' null 'm.motionSerifed' [DivFrame para.diversityM 3].middle (XH / 2)
 	create-glyph 'cyrl/sha.italic.motionSerifedTailed' : glyph-proc
 		local df : DivFrame para.diversityM 3
+		set-width df.width
 		include [refer-glyph 'm.motionSerifed'] AS_BASE
 		eject-contour 'barL'
 		eject-contour 'serifLT'
 		include : FlipAround df.middle (XH / 2)
 		include : RightwardTailedBar df.rightSB 0 XH (sw -- df.mvs)
+	create-glyph 'cyrl/sha.italic.motionSerifedShachaBase' : glyph-proc
+		local df : DivFrame para.diversityM 3
+		set-width df.width
+		include [refer-glyph 'm.motionSerifed'] AS_BASE
+		eject-contour 'serifLT'
+		include : FlipAround df.middle (XH / 2)
 
 	select-variant 'cyrl/sha.italic'
 	alias 'cyrl/sha.BGR' null 'cyrl/sha.italic'
@@ -93,7 +101,7 @@ glyph-block Letter-Cyrillic-Sha : begin
 	create-glyph 'cyrl/shcha.italic.motionSerifed' : glyph-proc
 		local df : DivFrame para.diversityM 3
 		set-width df.width
-		include [refer-glyph 'cyrl/sha.italic.motionSerifed'] AS_BASE
+		include [refer-glyph 'cyrl/sha.italic.motionSerifedShachaBase'] AS_BASE
 		include : CyrDescender df.rightSB (shift -- 0.05)
 
 	select-variant 'cyrl/shcha.italic'

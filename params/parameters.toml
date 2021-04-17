@@ -4,7 +4,7 @@
 
 [iosevka]
 naming.copyright = 'Copyright 2015-2021, Renzhi Li (aka. Belleve Invis, belleve@typeof.net).'
-naming.licence = '''This font software is licenced under the SIL Open Font Licence, Version 1.1. This is licence is avaliable with a FAQ at: http://scripts.sil.org/OFL. This font software is distributes on an 'AS IS' basis, without warranties or conditions of any kind, either express or implied. See the SIL Open Font licence fot the specific language, premissions and limitations governing your use of this font software.'''
+naming.licence = '''This font software is licenced under the SIL Open Font Licence, Version 1.1. This licence is available with a FAQ at: http://scripts.sil.org/OFL. This font software is distributed on an 'AS IS' basis, without warranties or conditions of any kind, either express or implied. See the SIL Open Font licence for the specific language, permissions and limitations governing your use of this font software.'''
 naming.manufacturer = 'Belleve Invis'
 naming.designer = 'Belleve Invis'
 naming.description = 'Spatial efficient monospace font family for programming. Built from code. http://be5invis.github.io/Iosevka'
@@ -29,12 +29,14 @@ arrowHeight = 1.50 # Height of arrows
 slopeAngle = 0     # slope angle, in degrees.
 derivedSlopeAngle = 10 # Slope angle of derived letters requiring italics
 
-accent = 155       # Height of accent marks.
-accentx = 200      # Width of accent marks.
-overshoot = -8     # Vertical overshoot for arcs.
-overshootx = -8    # Horizontal overshoot for arcs.
-oxhook = -2        # Horizontal overshoot for hook tips.
-fovershoot = -40   # Overshoot of the top end of italic `f`.
+accent = 155            # Height of accent marks.
+accentx = 200           # Width of accent marks.
+accentBaseOffset = 54   # Offset of accent marks to the base.
+accentStackOffset = 160 # Offset when accent marks stack.
+overshoot = -8          # Vertical overshoot for arcs.
+overshootx = -8         # Horizontal overshoot for arcs.
+oxhook = -2             # Horizontal overshoot for hook tips.
+fovershoot = -40        # Overshoot of the top end of italic `f`.
 
 shoulderfineMin = 0.8
 
@@ -106,10 +108,10 @@ diversityI  = 0.75
 diversityII = 0.50
 
 ###### Slopes
-[s-italic]
+[slope-italic]
 isItalic = true
 slopeAngle = 9.4
 
-[s-oblique]
+[slope-oblique]
 isOblique = true
 slopeAngle = 9.4

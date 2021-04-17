@@ -3,20 +3,28 @@
 const Transform = require("./transform");
 const Point = require("./point");
 const Anchor = require("./anchor");
+const Geom = require("./geometry");
 
 module.exports = class Glyph {
 	constructor(_identifier) {
 		this._m_identifier = _identifier;
-		this.contours = [];
+		this.geometry = new Geom.CombineGeometry();
 		this.advanceWidth = 500;
 		this.autoRefPriority = 0;
 		this.markAnchors = {};
 		this.baseAnchors = {};
 		this.gizmo = Transform.Id();
-		this.semanticInclusions = [];
 		this.dependencies = [];
-		this.defaultTag = null;
+		this.ctxTag = null;
 	}
+
+	get contours() {
+		throw new TypeError("Glyph::contours has been deprecated");
+	}
+	get semanticInclusions() {
+		throw new TypeError("Glyph::semanticInclusions has been deprecated");
+	}
+
 	get name() {
 		throw new TypeError("Glyph::name has been deprecated");
 	}
@@ -40,30 +48,12 @@ module.exports = class Glyph {
 		if (glyph._m_identifier) this.dependencies.push(glyph._m_identifier);
 		if (glyph.dependencies) for (const dep of glyph.dependencies) this.dependencies.push(dep);
 	}
-	// Contour Tagging
-	reTagContour(oldTag, newTag) {
-		for (const c of this.contours) if (c.tag === oldTag) c.tag = newTag;
-	}
-	ejectContour(tag) {
-		let i = 0,
-			j = 0;
-		for (; i < this.contours.length; i++) {
-			if (!this.contours[i].tag || this.contours[i].tag !== tag)
-				this.contours[j++] = this.contours[i];
-		}
-		this.contours.length = j;
-		this.semanticInclusions = [];
-	}
 	// Inclusion
 	include(component, copyAnchors, copyWidth) {
 		if (!component) {
 			throw new Error("Unreachable: Attempt to include a Null or Undefined");
 		} else if (component instanceof Function) {
-			const t = this.defaultTag;
-			if (component.tag) this.defaultTag = component.tag;
-			let ret = component.call(this, copyAnchors, copyWidth);
-			this.defaultTag = t;
-			return ret;
+			return component.call(this, copyAnchors, copyWidth);
 		} else if (component instanceof Transform) {
 			return this.applyTransform(component, copyAnchors);
 		} else if (component.isMarkSet) {
@@ -105,55 +95,70 @@ module.exports = class Glyph {
 		this.avoidBeingComposite = g.avoidBeingComposite;
 	}
 
-	isPureComposite() {
-		if (!this.semanticInclusions || !this.semanticInclusions.length) return false;
-		const origContourSet = new Set(this.contours);
-		let handledContours = new Set();
-		for (const sr of this.semanticInclusions) {
-			for (const c of sr.contours) {
-				if (!origContourSet.has(c) || handledContours.has(c)) return false;
-				handledContours.add(c);
-			}
-		}
-		for (const c of this.contours) if (!handledContours.has(c)) return false;
-		return true;
+	includeGeometry(g) {
+		if (this.ctxTag) g = new Geom.TaggedGeometry(g, this.ctxTag);
+		this.geometry = Geom.combineWith(this.geometry, g);
 	}
-
 	includeGlyphImpl(g, shiftX, shiftY) {
 		if (g._m_identifier) {
-			this.includeGlyphComponentImpl(g, shiftX, shiftY);
+			this.includeGeometry(new Geom.ReferenceGeometry(g, shiftX, shiftY));
 		} else {
-			this.includeGeometry(g, shiftX, shiftY);
-		}
-	}
-	includeGlyphComponentImpl(g, shiftX, shiftY) {
-		const newContours = this.includeGeometry(g, shiftX, shiftY);
-		if (newContours && newContours.length) {
-			this.semanticInclusions.push({
-				glyph: g,
-				x: shiftX,
-				y: shiftY,
-				contours: newContours
-			});
+			this.includeGeometry(
+				new Geom.TransformedGeometry(g.geometry, Transform.Translate(shiftX, shiftY))
+			);
 		}
 	}
 
-	includeGeometry(geom, shiftX, shiftY) {
-		if (!geom || !geom.contours || !geom.contours.length) return null;
-		return this.includeContours(geom.contours, shiftX, shiftY);
-	}
-	includeContours(contours, shiftX, shiftY) {
-		let newContours = [];
-		for (const contour of contours) {
+	includeContours(cs, shiftX, shiftY) {
+		let parts = [];
+		for (const contour of cs) {
 			let c = [];
-			c.tag = contour.tag || contours.tag || this.defaultTag;
 			for (const z of contour) c.push(Point.translated(z, shiftX, shiftY));
-			this.contours.push(c);
-			newContours.push(c);
+			parts.push(new Geom.ContourGeometry(c));
 		}
-		return newContours;
+		this.includeGeometry(new Geom.CombineGeometry(parts));
 	}
 
+	applyTransform(tfm, alsoAnchors) {
+		this.geometry = new Geom.TransformedGeometry(this.geometry, tfm);
+		if (alsoAnchors) {
+			for (const k in this.baseAnchors)
+				this.baseAnchors[k] = Anchor.transform(tfm, this.baseAnchors[k]);
+			for (const k in this.markAnchors)
+				this.markAnchors[k] = Anchor.transform(tfm, this.markAnchors[k]);
+		}
+	}
+
+	tryBecomeMirrorOf(dst, rankSet) {
+		if (rankSet.has(this) || rankSet.has(dst)) return;
+		const csThis = this.geometry.asContours();
+		const csDst = dst.geometry.asContours();
+		if (csThis.length !== csDst.length) return;
+		for (let j = 0; j < csThis.length; j++) {
+			const c1 = csThis[j],
+				c2 = csDst[j];
+			if (c1.length !== c2.length) return;
+		}
+		for (let j = 0; j < csThis.length; j++) {
+			const c1 = csThis[j],
+				c2 = csDst[j];
+			for (let k = 0; k < c1.length; k++) {
+				const z1 = c1[k],
+					z2 = c2[k];
+				if (z1.x !== z2.x || z1.y !== z2.y || z1.type !== z2.type) return;
+			}
+		}
+		this.geometry = new Geom.CombineGeometry([new Geom.ReferenceGeometry(dst, 0, 0)]);
+		rankSet.add(this);
+	}
+	clearGeometry() {
+		this.geometry = new Geom.CombineGeometry();
+	}
+	ejectTagged(tag) {
+		this.geometry = this.geometry.filterTag(t => tag !== t);
+	}
+
+	// Anchors
 	combineAnchor(shift, baseThis, markThat, basesThat) {
 		if (!baseThis || !markThat) return;
 		shift.x = baseThis.x - markThat.x;
@@ -171,68 +176,16 @@ module.exports = class Glyph {
 		if (g.markAnchors) for (const k in g.markAnchors) this.markAnchors[k] = g.markAnchors[k];
 		if (g.baseAnchors) for (const k in g.baseAnchors) this.baseAnchors[k] = g.baseAnchors[k];
 	}
-	applyTransform(tfm, alsoAnchors) {
-		for (const c of this.contours) {
-			for (let k = 0; k < c.length; k++) {
-				c[k] = Point.transformed(tfm, c[k]);
-			}
-		}
-		if (Transform.isTranslate(tfm)) {
-			for (const sr of this.semanticInclusions) {
-				sr.x += tfm.x;
-				sr.y += tfm.y;
-			}
-		} else {
-			// Applying a non-trivial inclusion will unlink all the SIs
-			this.semanticInclusions = [];
-		}
-		if (alsoAnchors) {
-			for (const k in this.baseAnchors)
-				this.baseAnchors[k] = Anchor.transform(tfm, this.baseAnchors[k]);
-			for (const k in this.markAnchors)
-				this.markAnchors[k] = Anchor.transform(tfm, this.markAnchors[k]);
-		}
-	}
-
-	tryBecomeMirrorOf(dst, rankSet) {
-		if (rankSet.has(this) || rankSet.has(dst)) return;
-		if (this.contours.length !== dst.contours.length) return;
-		for (let j = 0; j < this.contours.length; j++) {
-			const c1 = this.contours[j],
-				c2 = dst.contours[j];
-			if (c1.length !== c2.length) return;
-		}
-		for (let j = 0; j < this.contours.length; j++) {
-			const c1 = this.contours[j],
-				c2 = dst.contours[j];
-			for (let k = 0; k < c1.length; k++) {
-				const z1 = c1[k],
-					z2 = c2[k];
-				if (z1.x !== z2.x || z1.y !== z2.y || z1.type !== z2.type) return;
-			}
-		}
-		this.semanticInclusions = [
-			{
-				glyph: dst,
-				x: 0,
-				y: 0,
-				contours: [...this.contours]
-			}
-		];
-		rankSet.add(this);
-	}
-	clearGeometry() {
-		this.contours = [];
-		this.semanticInclusions = [];
-	}
-
-	// Anchors
 	setBaseAnchor(id, x, y) {
+		if (isNaN(x - 0) || isNaN(y - 0)) throw new Error(`NaN found in anchor coord for ${id}`);
 		this.baseAnchors[id] = new Anchor(x, y).transform(this.gizmo);
 	}
 	setMarkAnchor(id, x, y, mbx, mby) {
+		if (isNaN(x - 0) || isNaN(y - 0)) throw new Error(`NaN found in anchor coord for ${id}`);
 		this.markAnchors[id] = new Anchor(x, y).transform(this.gizmo);
 		if (mbx != null && mby != null) {
+			if (isNaN(mbx - 0) || isNaN(mby - 0))
+				throw new Error(`NaN found in anchor coord for ${id}`);
 			this.baseAnchors[id] = new Anchor(mbx, mby).transform(this.gizmo);
 		}
 	}

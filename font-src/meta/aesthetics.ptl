@@ -39,6 +39,7 @@ export : define [calculateMetrics para] : begin
 	define [Upright angle shift] [Italify angle shift :.inverse]
 	define [Scale sx sy] : new Transform sx 0 0 [fallback sy sx] 0 0
 	define [Translate x y] : new Transform 1 0 0 1 x y
+	define [ApparentTranslate x y] : Translate (x + TanSlope * y) y
 	define [Rotate angle] : new Transform [Math.cos angle] (-[Math.sin angle]) [Math.sin angle] [Math.cos angle] 0 0
 
 	define GlobalTransform : Italify para.slopeAngle
@@ -95,11 +96,13 @@ export : define [calculateMetrics para] : begin
 	define OverlayPos DesignParameters.overlayPos
 	define Jut para.jut
 	define LongJut para.longjut
+	define VJut para.vjut
 	define MidJutSide   : Math.max Jut : mix (0.5 * Stroke * HVContrast) LongJut 0.5
 	define MidJutCenter : Math.max Jut : mix (0.5 * Stroke * HVContrast) LongJut 0.6
-	define VJut para.vjut
-	define Accent para.accent
-	define AccentX para.accentx
+	define Accent            para.accent
+	define AccentX           para.accentx
+	define AccentBaseOffset  para.accentBaseOffset
+	define AccentStackOffset para.accentStackOffset
 
 	define CThin : fallback para.cthin 0.75
 	define CThinB : fallback para.cthinb 0.5
@@ -108,12 +111,10 @@ export : define [calculateMetrics para] : begin
 
 	define TailAdjX : Width * 0.2
 	define TailAdjY : XH * 0.25
-	define LBalance : LongJut * 0.04
-	define IBalance : fallback para.ibalance (LongJut * 0.04)
-	define LBalance2 : LongJut * 0.14
-	define IBalance2 : fallback para.ibalance (LongJut * 0.14)
+	define [IBalance df] : df.div * df.div * [fallback para.ibalance (LongJut * 0.04)] # Serifed
+	define [IBalance2 df] : df.div * [fallback para.ibalance2 (LongJut * 0.14)]        # Hooky, Tailed
 	define JBalance : fallback para.jbalance 0
-	define JBalance2 : fallback para.jbalance2 (Stroke * 0.25 + LBalance)
+	define JBalance2 : fallback para.jbalance2 (Stroke * 0.25 + LongJut * 0.04)
 	define TBalance : fallback para.tbalance JBalance
 	define TBalance2 : fallback para.tbalance2 TBalance
 	define RBalance : fallback para.rbalance (JBalance * 0.3)
@@ -195,16 +196,16 @@ export : define [calculateMetrics para] : begin
 	return [object
 		UPM HalfUPM Width SB CAP XH Descender Contrast SymbolMid ParenTop ParenBot OperTop OperBot
 		TackTop TackBot PlusTop PlusBot PictTop PictBot BgOpTop BgOpBot Italify Upright Scale
-		Translate Rotate GlobalTransform TanSlope HVContrast Upward Downward Rightward Leftward
-		UpwardT DownwardT LeftwardT RightwardT O OX OXHook Hook AHook SHook RHook JHook FHook HookX
-		Smooth SmallSmooth Stroke DotSize PeriodSize HBarPos OverlayPos
-		LongJut Jut VJut Accent AccentX CThin CThinB SLAB TailAdjX TailAdjY LBalance
-		IBalance LBalance2 IBalance2 JBalance JBalance2 TBalance TBalance2 RBalance RBalance2
-		FBalance OneBalance WideWidth0 WideWidth1 WideWidth2 WideWidth3 WideWidth4 Ess EssQuestion
-		HalfStroke RightSB Middle CapMiddle DotRadius PeriodRadius SideJut SmoothA
-		SmoothB SmallSmoothA SmallSmoothB CorrectionOMidX CorrectionOMidS compositeBaseAnchors
-		AdviceStroke AdviceStroke2 MVertStroke MVertStrokeD OverlayStroke OperatorStroke
-		GeometryStroke ShoulderFine _SuperXY adviceSSmooth adviceGlottalStopSmooth
+		Translate ApparentTranslate Rotate GlobalTransform TanSlope HVContrast Upward Downward
+		Rightward Leftward UpwardT DownwardT LeftwardT RightwardT O OX OXHook Hook AHook SHook RHook
+		JHook FHook HookX Smooth SmallSmooth Stroke DotSize PeriodSize HBarPos OverlayPos
+		LongJut Jut VJut Accent AccentX AccentBaseOffset AccentStackOffset CThin CThinB SLAB
+		TailAdjX TailAdjY IBalance IBalance2 JBalance JBalance2 TBalance
+		TBalance2 RBalance RBalance2 FBalance OneBalance WideWidth0 WideWidth1 WideWidth2 WideWidth3
+		WideWidth4 Ess EssQuestion HalfStroke RightSB Middle CapMiddle DotRadius PeriodRadius
+		SideJut SmoothA SmoothB SmallSmoothA SmallSmoothB CorrectionOMidX CorrectionOMidS
+		compositeBaseAnchors AdviceStroke AdviceStroke2 MVertStroke MVertStrokeD OverlayStroke
+		OperatorStroke GeometryStroke ShoulderFine _SuperXY adviceSSmooth adviceGlottalStopSmooth
 		shoulderMidSlope StrokeWidthBlend SmoothAOf SmoothBOf SmoothAdjust MidJutSide MidJutCenter
 		YSmoothMidR YSmoothMidL]
 
@@ -235,6 +236,23 @@ export : define [setFontMetrics para metrics fm] : begin
 	set fm.OS_2.sCapHeight        CAP
 	set fm.post.italicAngle       [Math.round (0 - para.slopeAngle)]
 
+export : define [copyFontMetrics fm1 fm2] : begin
+	set fm2.OS_2.xAvgCharWidth     fm1.OS_2.xAvgCharWidth
+	set fm2.head.unitsPerEm        fm1.head.unitsPerEm
+	set fm2.hhea.ascender          fm1.hhea.ascender
+	set fm2.OS_2.usWinAscent       fm1.OS_2.usWinAscent
+	set fm2.OS_2.sTypoAscender     fm1.OS_2.sTypoAscender
+
+	set fm2.hhea.descender         fm1.hhea.descender
+	set fm2.OS_2.usWinDescent      fm1.OS_2.usWinDescent
+	set fm2.OS_2.sTypoDescender    fm1.OS_2.sTypoDescender
+
+	set fm2.hhea.lineGap           fm1.hhea.lineGap
+	set fm2.OS_2.sTypoLineGap      fm1.OS_2.sTypoLineGap
+
+	set fm2.OS_2.sxHeight          fm1.OS_2.sxHeight
+	set fm2.OS_2.sCapHeight        fm1.OS_2.sCapHeight
+	set fm2.post.italicAngle       fm1.post.italicAngle
 
 export : define [compositeBaseAnchors] : begin
 	local h {.}

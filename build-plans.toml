@@ -8,6 +8,7 @@ optimizeWithTtx = false
 family = "Iosevka"
 desc = "Default"
 snapshotFamily = 'iosevka'
+snapshotFeature = '"NWID" off'
 
 [buildPlans.iosevka-term]
 family = "Iosevka Term"
@@ -27,6 +28,7 @@ family = "Iosevka Slab"
 desc = "Slab-serif"
 serifs = "slab"
 snapshotFamily = 'iosevka-slab'
+snapshotFeature = '"NWID" off'
 
 [buildPlans.iosevka-term-slab]
 family = "Iosevka Term Slab"
@@ -102,6 +104,7 @@ family = "Iosevka SS01"
 desc = "Andale Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss01" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss01.variants]
 inherits = "ss01"
 
@@ -110,6 +113,7 @@ family = "Iosevka Term SS01"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss01" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss01.variants]
 inherits = "ss01"
 
@@ -118,6 +122,7 @@ family = "Iosevka Fixed SS01"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss01" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss01.variants]
 inherits = "ss01"
 
@@ -127,6 +132,7 @@ family = "Iosevka SS02"
 desc = "Anonymous Pro Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss02" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss02.variants]
 inherits = "ss02"
 
@@ -135,6 +141,7 @@ family = "Iosevka Term SS02"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss02" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss02.variants]
 inherits = "ss02"
 
@@ -143,6 +150,7 @@ family = "Iosevka Fixed SS02"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss02" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss02.variants]
 inherits = "ss02"
 
@@ -152,6 +160,7 @@ family = "Iosevka SS03"
 desc = "Consolas Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss03" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss03.variants]
 inherits = "ss03"
 
@@ -160,6 +169,7 @@ family = "Iosevka Term SS03"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss03" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss03.variants]
 inherits = "ss03"
 
@@ -168,6 +178,7 @@ family = "Iosevka Fixed SS03"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss03" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss03.variants]
 inherits = "ss03"
 
@@ -177,6 +188,7 @@ family = "Iosevka SS04"
 desc = "Menlo Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss04" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss04.variants]
 inherits = "ss04"
 
@@ -185,6 +197,7 @@ family = "Iosevka Term SS04"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss04" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss04.variants]
 inherits = "ss04"
 
@@ -193,6 +206,7 @@ family = "Iosevka Fixed SS04"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss04" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss04.variants]
 inherits = "ss04"
 
@@ -202,6 +216,7 @@ family = "Iosevka SS05"
 desc = "Fira Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss05" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss05.variants]
 inherits = "ss05"
 
@@ -210,6 +225,7 @@ family = "Iosevka Term SS05"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss05" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss05.variants]
 inherits = "ss05"
 
@@ -218,6 +234,7 @@ family = "Iosevka Fixed SS05"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss05" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss05.variants]
 inherits = "ss05"
 
@@ -227,6 +244,7 @@ family = "Iosevka SS06"
 desc = "Liberation Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss06" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss06.variants]
 inherits = "ss06"
 
@@ -235,6 +253,7 @@ family = "Iosevka Term SS06"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss06" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss06.variants]
 inherits = "ss06"
 
@@ -243,6 +262,7 @@ family = "Iosevka Fixed SS06"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss06" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss06.variants]
 inherits = "ss06"
 
@@ -252,6 +272,7 @@ family = "Iosevka SS07"
 desc = "Monaco Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss07" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss07.variants]
 inherits = "ss07"
 
@@ -260,6 +281,7 @@ family = "Iosevka Term SS07"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss07" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss07.variants]
 inherits = "ss07"
 
@@ -268,16 +290,17 @@ family = "Iosevka Fixed SS07"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss07" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss07.variants]
 inherits = "ss07"
 
 
-# The SS08 has curly bars, so apply ss20 first
 [buildPlans.iosevka-ss08]
 family = "Iosevka SS08"
 desc = "Pragmata Pro Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss08" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss08.variants]
 inherits = "ss08"
 
@@ -286,6 +309,7 @@ family = "Iosevka Term SS08"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss08" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss08.variants]
 inherits = "ss08"
 
@@ -294,6 +318,7 @@ family = "Iosevka Fixed SS08"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss08" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss08.variants]
 inherits = "ss08"
 
@@ -303,6 +328,7 @@ family = "Iosevka SS09"
 desc = "Source Code Pro Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss09" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss09.variants]
 inherits = "ss09"
 
@@ -311,6 +337,7 @@ family = "Iosevka Term SS09"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss09" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss09.variants]
 inherits = "ss09"
 
@@ -319,6 +346,7 @@ family = "Iosevka Fixed SS09"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss09" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss09.variants]
 inherits = "ss09"
 
@@ -328,6 +356,7 @@ family = "Iosevka SS10"
 desc = "Envy Code R Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss10" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss10.variants]
 inherits = "ss10"
 
@@ -336,6 +365,7 @@ family = "Iosevka Term SS10"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss10" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss10.variants]
 inherits = "ss10"
 
@@ -344,6 +374,7 @@ family = "Iosevka Fixed SS10"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss10" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss10.variants]
 inherits = "ss10"
 
@@ -353,6 +384,7 @@ family = "Iosevka SS11"
 desc = "X Windows Fixed Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss11" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss11.variants]
 inherits = "ss11"
 
@@ -361,6 +393,7 @@ family = "Iosevka Term SS11"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss11" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss11.variants]
 inherits = "ss11"
 
@@ -369,6 +402,7 @@ family = "Iosevka Fixed SS11"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss11" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss11.variants]
 inherits = "ss11"
 
@@ -378,6 +412,7 @@ family = "Iosevka SS12"
 desc = "Ubuntu Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss12" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss12.variants]
 inherits = "ss12"
 
@@ -386,6 +421,7 @@ family = "Iosevka Term SS12"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss12" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss12.variants]
 inherits = "ss12"
 
@@ -394,6 +430,7 @@ family = "Iosevka Fixed SS12"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss12" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss12.variants]
 inherits = "ss12"
 
@@ -403,6 +440,7 @@ family = "Iosevka SS13"
 desc = "Lucida Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss13" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss13.variants]
 inherits = "ss13"
 
@@ -411,6 +449,7 @@ family = "Iosevka Term SS13"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss13" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss13.variants]
 inherits = "ss13"
 
@@ -419,6 +458,7 @@ family = "Iosevka Fixed SS13"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss13" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss13.variants]
 inherits = "ss13"
 
@@ -428,6 +468,7 @@ family = "Iosevka SS14"
 desc = "JetBrains Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss14" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss14.variants]
 inherits = "ss14"
 
@@ -436,6 +477,7 @@ family = "Iosevka Term SS14"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss14" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss14.variants]
 inherits = "ss14"
 
@@ -444,6 +486,7 @@ family = "Iosevka Fixed SS14"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss14" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss14.variants]
 inherits = "ss14"
 
@@ -453,6 +496,7 @@ family = "Iosevka SS15"
 desc = "IBM Plex Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss15" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss15.variants]
 inherits = "ss15"
 
@@ -461,6 +505,7 @@ family = "Iosevka Term SS15"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss15" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss15.variants]
 inherits = "ss15"
 
@@ -469,6 +514,7 @@ family = "Iosevka Fixed SS15"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss15" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss15.variants]
 inherits = "ss15"
 
@@ -478,6 +524,7 @@ family = "Iosevka SS16"
 desc = "PT Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss16" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss16.variants]
 inherits = "ss16"
 
@@ -486,6 +533,7 @@ family = "Iosevka Term SS16"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss16" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss16.variants]
 inherits = "ss16"
 
@@ -494,6 +542,7 @@ family = "Iosevka Fixed SS16"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss16" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss16.variants]
 inherits = "ss16"
 
@@ -503,22 +552,25 @@ family = "Iosevka SS17"
 desc = "Recursive Mono Style"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"ss17" on'
+no-cv-ss = true
 [buildPlans.iosevka-ss17.variants]
 inherits = "ss17"
 
 [buildPlans.iosevka-term-ss17]
-family = "Iosevka Term SS15"
+family = "Iosevka Term SS17"
 spacing = "term"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss17" on'
+no-cv-ss = true
 [buildPlans.iosevka-term-ss17.variants]
 inherits = "ss17"
 
 [buildPlans.iosevka-fixed-ss17]
-family = "Iosevka Fixed SS15"
+family = "Iosevka Fixed SS17"
 spacing = "fixed"
 snapshotFamily = 'iosevka'
 snapshotFeature = '"NWID" on, "ss17" on'
+no-cv-ss = true
 [buildPlans.iosevka-fixed-ss17.variants]
 inherits = "ss17"
 
@@ -531,56 +583,67 @@ family  = "Iosevka Aile"
 desc = "Sans-serif"
 spacing = "quasi-proportional"
 snapshotFamily = 'iosevka-aile'
+snapshotFeature = '"NWID" off'
 
 [buildPlans.iosevka-aile.variants.design]
-at = 'fourfold'
-j = 'flat-hook-serifless'
-capital-i = 'serifless'
-capital-j = 'serifless'
-capital-w = 'straight-flat-top'
-g = 'single-storey'
-r = 'compact'
-a = 'double-storey'
-d = 'toothed'
-u = 'toothed'
-i = 'serifless'
-l = 'serifless'
-f = 'flat-hook'
-t = 'flat-hook'
-w = 'straight-flat-top'
+capital-i = "serifless"
+capital-j = "serifless"
+capital-k = "straight"
+capital-m = "flat-bottom"
+capital-w = "straight-flat-top"
+a = "double-storey"
+d = "toothed-serifless"
+e = "flat-crossbar"
+f = "flat-hook"
+g = "single-storey"
+i = "serifless"
+j = "flat-hook-serifless"
+k = "straight"
+l = "serifless"
+r = "compact"
+t = "flat-hook"
+u = "toothed"
+w = "straight-flat-top"
+y = "straight"
+eszet = "longs-s-lig"
+lower-iota = "flat-tailed"
+lower-lambda = "straight-turn"
+cyrl-ka = "symmetric-connected"
+cyrl-capital-u = "straight"
+at = "fourfold"
+percent = "rings-continuous-slash"
 
 # Letterform control for U+1D670 ... U+1D6A3
 [buildPlans.iosevka-aile.derivingVariants.mathtt.design]
-at = 'threefold'
-j = 'flat-hook-serifed'
-capital-i = 'serifed'
-capital-j = 'serifed'
-capital-w = 'straight-flat-top'
-g = 'single-storey'
-r = 'serifless'
-a = 'double-storey'
-d = 'toothed'
-u = 'toothed'
-t = 'flat-hook'
-w = 'straight-flat-top'
-
-[buildPlans.iosevka-aile.derivingVariants.mathtt.upright]
-i = 'serifed'
-l = 'serifed'
-f = 'flat-hook'
-
-[buildPlans.iosevka-aile.derivingVariants.mathtt.oblique]
-i = 'serifed'
-l = 'serifed'
-f = 'flat-hook'
-
-[buildPlans.iosevka-aile.derivingVariants.mathtt.italic]
-i = 'serifed-tailed'
-l = 'serifed-tailed'
-f = 'flat-hook-tailed'
+capital-i = "serifed"
+capital-j = "serifless"
+capital-k = "straight"
+capital-m = "flat-bottom"
+capital-w = "straight-flat-top"
+a = "double-storey"
+d = "toothed-serifless"
+e = "flat-crossbar"
+f = "flat-hook"
+g = "single-storey"
+i = "serifed"
+j = "flat-hook-serifed"
+k = "straight"
+l = "serifed"
+r = "compact"
+t = "flat-hook"
+u = "toothed"
+w = "straight-flat-top"
+y = "straight"
+eszet = "longs-s-lig"
+lower-iota = "flat-tailed"
+lower-lambda = "straight-turn"
+cyrl-ka = "symmetric-connected"
+cyrl-capital-u = "straight"
+at = "fourfold"
+percent = "rings-continuous-slash"
 
 [buildPlans.iosevka-aile.widths.normal]
-shape = 576
+shape = 600
 menu  = 5
 css   = "normal"
 
@@ -592,22 +655,33 @@ desc = "Slab-serif"
 spacing = "quasi-proportional"
 serifs = 'slab'
 snapshotFamily = 'iosevka-etoile'
+snapshotFeature = '"NWID" off'
 
 [buildPlans.iosevka-etoile.variants.design]
 at = 'fourfold'
 capital-w = 'straight-flat-top'
-j = 'serifed'
+f = "flat-hook-serifed"
+j = 'flat-hook-serifed'
+t = "flat-hook"
 w = 'straight-flat-top'
+
+[buildPlans.iosevka-etoile.variants.italic]
+f = "flat-hook-tailed"
 
 # Letterform control for U+1D670 ... U+1D6A3
 [buildPlans.iosevka-etoile.derivingVariants.mathtt.design]
 at = 'threefold'
 capital-w = 'straight-flat-top'
-j = 'serifed'
+f = "flat-hook-serifed"
+j = 'flat-hook-serifed'
+t = "flat-hook"
 w = 'straight-flat-top'
 
+[buildPlans.iosevka-etoile.derivingVariants.mathtt.italic]
+f = "flat-hook-tailed"
+
 [buildPlans.iosevka-etoile.widths.normal]
-shape = 576
+shape = 600
 menu  = 5
 css   = "normal"
 
@@ -629,6 +703,7 @@ spacing = "quasi-proportional"
 # Collect plans
 
 [collectPlans.iosevka]
+release = true
 from = [
 	"iosevka",
 	"iosevka-term",
@@ -636,6 +711,7 @@ from = [
 ]
 
 [collectPlans.iosevka-slab]
+release = true
 from = [
 	"iosevka-slab",
 	"iosevka-term-slab",
@@ -643,6 +719,7 @@ from = [
 ]
 
 [collectPlans.iosevka-curly]
+release = true
 from = [
 	"iosevka-curly",
 	"iosevka-term-curly",
@@ -650,6 +727,7 @@ from = [
 ]
 
 [collectPlans.iosevka-curly-slab]
+release = true
 from = [
 	"iosevka-curly-slab",
 	"iosevka-term-curly-slab",
@@ -657,6 +735,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss01]
+release = true
 from = [
 	"iosevka-ss01",
 	"iosevka-term-ss01",
@@ -664,6 +743,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss02]
+release = true
 from = [
 	"iosevka-ss02",
 	"iosevka-term-ss02",
@@ -671,6 +751,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss03]
+release = true
 from = [
 	"iosevka-ss03",
 	"iosevka-term-ss03",
@@ -678,6 +759,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss04]
+release = true
 from = [
 	"iosevka-ss04",
 	"iosevka-term-ss04",
@@ -685,6 +767,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss05]
+release = true
 from = [
 	"iosevka-ss05",
 	"iosevka-term-ss05",
@@ -692,6 +775,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss06]
+release = true
 from = [
 	"iosevka-ss06",
 	"iosevka-term-ss06",
@@ -699,6 +783,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss07]
+release = true
 from = [
 	"iosevka-ss07",
 	"iosevka-term-ss07",
@@ -706,6 +791,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss08]
+release = true
 from = [
 	"iosevka-ss08",
 	"iosevka-term-ss08",
@@ -713,6 +799,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss09]
+release = true
 from = [
 	"iosevka-ss09",
 	"iosevka-term-ss09",
@@ -720,6 +807,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss10]
+release = true
 from = [
 	"iosevka-ss10",
 	"iosevka-term-ss10",
@@ -727,6 +815,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss11]
+release = true
 from = [
 	"iosevka-ss11",
 	"iosevka-term-ss11",
@@ -734,6 +823,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss12]
+release = true
 from = [
 	"iosevka-ss12",
 	"iosevka-term-ss12",
@@ -741,6 +831,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss13]
+release = true
 from = [
 	"iosevka-ss13",
 	"iosevka-term-ss13",
@@ -748,6 +839,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss14]
+release = true
 from = [
 	"iosevka-ss14",
 	"iosevka-term-ss14",
@@ -755,6 +847,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss15]
+release = true
 from = [
 	"iosevka-ss15",
 	"iosevka-term-ss15",
@@ -762,6 +855,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss16]
+release = true
 from = [
 	"iosevka-ss16",
 	"iosevka-term-ss16",
@@ -769,6 +863,7 @@ from = [
 ]
 
 [collectPlans.iosevka-ss17]
+release = true
 from = [
 	"iosevka-ss17",
 	"iosevka-term-ss17",
@@ -776,9 +871,11 @@ from = [
 ]
 
 [collectPlans.iosevka-aile]
+release = true
 from = ["iosevka-aile"]
 
 [collectPlans.iosevka-etoile]
+release = true
 from = ["iosevka-etoile"]
 
 [collectConfig]
@@ -861,7 +958,7 @@ menu  = 5
 css   = "normal"
 
 [widths.extended]
-shape = 576
+shape = 600
 menu  = 7
 css   = "expanded"
 

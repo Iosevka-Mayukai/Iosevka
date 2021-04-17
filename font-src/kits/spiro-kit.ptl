@@ -1,5 +1,5 @@
 import 'spiro' as SpiroJs
-import '../support/spiro-expand' as SpiroExpansionContext
+import [SpiroExpansionContext1 SpiroExpansionContext2] from '../support/spiro-expand'
 import '../support/curve-util' as CurveUtil
 import '../support/transform' as Transform
 import '../support/utils' as [object fallback mix bez2 bez3]
@@ -63,9 +63,7 @@ export : define [SetupBuilders args] : begin
 	define [widths.center.heading w d] : lambda [] : begin
 		if this.setWidth : this.setWidth ([fallback w Stroke] / 2) ([fallback w Stroke] / 2)
 		if this.headsTo : this.headsTo d
-	define [unimportant] : begin
-		if (this.points && this.points.length && this.points.(this.points.length - 1)) : this.points.(this.points.length - 1).subdivided = true
-		if (this.controlKnots && this.controlKnots.length && this.controlKnots.(this.controlKnots.length - 1)) : this.controlKnots.(this.controlKnots.length - 1).unimportant = true
+	define [unimportant] : if this.setUnimportant : this.setUnimportant
 	define [important] nothing
 
 	# Interpolation pesudoknots
@@ -87,9 +85,19 @@ export : define [SetupBuilders args] : begin
 				args.raf                                        args.raf
 				true                                            unimportant
 		return innerKnots
+	define [afInterpolateSNeck before after args] : list
+		g2
+			mix before.x after.x (1 / 2 - args.px / 6)
+			mix before.y after.y (1 / 2 - args.py / 6)
+			widths (args.sw * args.ps) (args.sw * (1 - args.ps))
+		g2
+			mix before.x after.x (1 / 2 + args.px / 6)
+			mix before.y after.y (1 / 2 + args.py / 6)
+			widths (args.sw * (1 - args.ps)) (args.sw * args.ps)
 
 	define [alsoThru rx ry raf] {.type 'interpolate' .rx rx .ry ry .raf raf .af afInterpolate}
 	set alsoThru.g2 : lambda [rx ry raf] {.type 'interpolate' .rx rx .ry ry .raf raf .af afInterpolateG2}
+	set alsoThru.sNeck : lambda [px py sw ps] {.type 'interpolate' .px px .py py .sw sw .ps ps .af afInterpolateSNeck}
 	define [alsoThruThem rs raf ty] {.type 'interpolate' .rs rs .raf raf .ty ty .af afInterpolateThem}
 	define [bezControlsImpl x1 y1 x2 y2 samples raf ty] : begin
 		local rs {}
@@ -175,21 +183,24 @@ export : define [SetupBuilders args] : begin
 		return { .knots knots .closed closed }
 
 	define [convertSpiroToBezier knots closed ctx] : begin
-		define CUBIC                false
-		return : SpiroJs.spiroToBezierOnContext knots closed ctx CUBIC CurveUtil.GEOMETRY_PRECISION
+		return : SpiroJs.spiroToBezierOnContext knots closed ctx CurveUtil.SPIRO_PRECISION
 
 	define [dispiro] : let [args : {}.slice.call arguments 0] : lambda [] : begin
 		define CLOSED true
-		local s : new SpiroExpansionContext
-		set s.gizmo : this.gizmo || GlobalTransform
+		local s : new SpiroExpansionContext1 (this.gizmo || GlobalTransform)
 		local { .knots knots .closed closed } : prepareSpiroKnots [{}.slice.call args 0] s
 		foreach knot [items-of knots] : let [ty knot.type] [af knot.af] : begin
 			set knot.af : lambda [] : begin
 				this.setType ty
 				if af : af.apply this args
-		SpiroJs.spiroToArcsOnContext knots closed s
 
+		SpiroJs.spiroToArcsOnContext knots closed s
+		local knotsP2 : s.getPass2Knots closed [fallback s.contrast Contrast]
+		# console.log knotsP2
+		local s2 : new SpiroExpansionContext2 s.controlKnots s.gizmo
+		SpiroJs.spiroToArcsOnContext knotsP2 closed s2
 		local {.lhs lhs .rhs rhs} : s.expand [fallback s.contrast Contrast]
+
 		if closed : then
 			local g : new CurveUtil.BezToContoursSink
 			# CurveUtil.BezToContoursSink::beginShape won't clear the contours
@@ -206,14 +217,14 @@ export : define [SetupBuilders args] : begin
 		set g.knots knots
 		set g.lhsKnots lhs
 		set g.rhsKnots rhs
-		this.includeGeometry g 0 0
+		this.includeContours g.contours 0 0
 		return g
 
 	define [spiro-outline] : let [k : {}.slice.call arguments 0] : lambda [] : begin
 		local g : new CurveUtil.BezToContoursSink (this.gizmo || GlobalTransform)
 		local { .knots knots .closed closed } : prepareSpiroKnots k g
 		convertSpiroToBezier knots closed g
-		this.includeGeometry g 0 0
+		this.includeContours g.contours 0 0
 		return g
 
 	return [object

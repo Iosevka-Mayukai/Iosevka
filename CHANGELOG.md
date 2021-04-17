@@ -1,56 +1,158 @@
 ## Modifications since version 2.x
 
-### 5.0.0-beta.3
+### 6.0.0-preview.3
 
- * **Breaking** Continue organizing and renaming variants.
-   - Variants of percent (`%`) sign are renamed.
- * Fix the incorrect order of `capital-s` (`cv17`) and `capital-t` (`cv18`) variants (#831).
- * Fix Misplaced serif in Slab `cyrl/e` (#832).
- * Fix variant selector for `cyrl/shcha` (#833).
- * Add oval slashed / dotted variants for `0` (#834).
- * Add rings-continuous-slash-also-connected variant to `%` (#835).
- * Add inward-serifed variants for `C`, `G`, `S`, `c` (#837).
- * Add asymmetric variants for `N` (#838).
- * Add base-serifed variants for `Y` (#850).
- * Add base-serifed variants for `r` (#851).
- * Add stylistic set matching PT Mono and Recursive Mono (#855).
- * Add character Z NOTATION SCHEMA COMPOSITION (`U+2A1F`) and Z NOTATION RELATION COMPOSITION (`U+2A3E`) (#857).
-
-
-### 5.0.0-beta.2
-
- * Fix broken curly variants of `x` and `X` (#824).
- * Add compact-serifed and compact-top-serifed variants of `r` (#826).
- * Allow Zeta to share variants with `Z` (#827).
- * Add serifed and top-serifed variants for `S` and `s` (#822).
- * Add oblique-upper-left-bar variant for `5` (#820).
- * Add oval variant for `0` (#828).
- * Add corner and flat-hooked variants for `?` (#829).
+ * \[**Breaking**\]: The grades for width is updated to make the unit width of Extended subfamily being 0.6em.
+ * \[**Breaking**\]: Made serifed variants of `X`, `Y`, `Z`, `x` and `z` selectable via variant selector (#939).
+ * \[**Breaking**\]: Reorganize variants of `A`, `B`, `D`, `J`, `X`, `Y`, `Z`, `d`, `x` and `z`.
+ * Update SS02 and SS16 to better reflect their source fonts (#939).
+ * Remove unnecessary serifs of Slab Italic Small Cyrillic KA (#938).
+ * Add flat-hook variants of `J` (#940, #945).
+ * Add flat-arc parenthesis (#941).
+ * Fixed broken shape of Motion Serifed Cyrl/Shcha (#944).
+ * Add vertical-sides variants of `W` and `w` (#950).
+ * Add cursive capital `Z` (#951).
+ * Add flat-hooked Long S and Eszet (#952).
+ * Add slant-sided `M` (#953).
 
 
-### 5.0.0-beta.1
+### 5.2.1
+
+ * Add corner-hooked variants for `r` (#935).
+
+
+### 5.2.0
+
+ * Add asymmetric crossing `8` (#867).
+ * Fix incorrect placement of asterisk in SS04 (#928).
+ * Fix typo in the copyright field of the NAME table (#929).
+ * Improve legibility of Cyrillic Tshe and Dje (#931).
+ * Fix broken shape of Latin Small Caps AE (#933).
+ * Add shoer-neck variants for non-flat-hook styles of `t` (#934).
+
+
+### 5.1.1
+
+ * Re-enable cursive form of Cyrillic Small HA (#922).
+ * Cyrillic Small Ef is changed to cursive in Italic Slab subfamilies (#922).
+
+
+### 5.1.0
+
+ * Fix serif length of Cyrillic Yeru under Iosevka Etoile (#922).
+ * Add central serif for Cyrillic Zhe, Big Yus and Small Yus (#922).
+ * Reduce serifs of italic Cyrillic Ka, El, Em, En, Che, Yer, and Yu (#922).
+ * Add rounded and cursive shape for Yer, Yeri, Yery, Nje and Lje (#922).
+ * Add a tri-serif variant to `A` (#925).
+
+
+### 5.0.9
+
+ * Fix missing serif of cursive `w` in Slab.
+ * Refine geometry of cursive `x` (#917).
+
+
+### 5.0.8
+
+ * Fix metrics of Latin Small Letter M with Hook in Aile (`U+0271`).
+ * Fix broken shape of of Latin Small Letter L with Retroflex Hook (`U+026D`).
+
+
+### 5.0.7
+
+ * Fix width of `cyrl/sha.italic.tailed` and `cyrl/sha.italic.motionSerifedTailed` (#909).
+ * Optimize geometry for Comma for better legibility (#912).
+
+
+### 5.0.6
+
+ * Fix incorrect serif shape for motion-serifed `m` under semi-proportional subfamilies.
+ * Add cursive variant for `x` and `z` (#852).
+ * Slab will now use more cursive variants for `k`, `x` and `z`.
+ * `ss15` and `ss17` are updated to use latest cursive variants (#852).
+
+
+### 5.0.5
+
+ * The variants of Aile is now chosen to better reflect a Neo-Grotesque fashion (#903).
+ * Add Heavy Black Curved Upwards And Rightwards Arrow (`U+27A6`) for Agnoster compatibility.
+ * Add characters:
+   - Commercial Minus Sign (`U+2052`).
+   - Precedes Under Relation (`U+22B0`) and Succeeds Under Relation (`U+22B1`)
+   - Heavy Black Curved Downwards And Rightwards Arrow (`U+27A5`)
+ * Improved spacing of tailed / flat-tailed `i`, `l` and `iota` characters (#905).
+
+
+### 5.0.4
+
+ * Add ligation for chained hyphens and tildes (#893).
+ * Add symbols used by BQN programming language (`U+2389`, `U+2687`, `U+231C`, `U+238A`, `U+27DC`, and `U+294A`; #870).
+
+
+### 5.0.3
+
+ * Add ligation set for chaining number signs (#894).
+
+
+### 5.0.2
+
+ * Fixed SS17 family names for Term and Fixed.
+
+
+### 5.0.1
+
+ * Correct shape of turned `t`, and width of various variant of `t` and `r` in Aile (#892).
+ * Add ligation for connected underscore. Currently only under `dlig` (#888).
+
+
+### 5.0.0
 
  * **Breaking** Iosevka Aile and Iosevka Etoile now support `cv##` and `ss##` features.
+ * **Breaking** Pre-built “SS” families will no longer contain `cv##` and `ss##` features, as their style has already been pre-baked.
  * **Breaking** Iosevka Sparkle is removed from prebuilt packages.
  * **Breaking** Reorder `cv##` features and variant assignments for better organization.
  * **Breaking** Spilt out variant selector for `A`, `V`, `W`, `Z` (#806).
  * **Breaking** Certain variants' names are changed:
    - Phrase `singlestorey` and `doublestorey` used in  `a` and `g` variants are renamed to `single-storey` and `double-storey`.
- * Add diagonal-tailed variants for `f`, `i`, `j`, `k`, `l`, `q`, `t` (#795).
- * Add motion-serifed variants for `A`, `B`, `D`, `E`, `F`, `H`, `K`, `M`, `N`, `P`, `R`, `T`, `V`, `W`, `X`, `Y`, `Z`, `v`, `w`, `x`, `y`, `z` (#806, #815, #818).
- * Add symmetric-legged variants for `K` and `k` (#807).
- * Add horizontal-tailed and detach-tailed variants for `Q` (#808).
- * Add hookless and capped variants for `G` (#809).
- * Add open-contour variants for `P` and `R` (#810).
- * Add standing variants for `R` (#810).
- * Add toothed and motion-serifed variants for `U` (#811).
- * Add double-v and asymmetric variants for `W` and `w` (#812).
- * Add motion-serifed toothless variants for `u` (#813).
- * Add flat-serifed variants for `1` (#819).
- * Add IBM Plex Mono style set (#796).
- * Fix broken geometry of `K` and `%` under ultra-wide (#800).
- * Add straight-bar AE (`Æ`), follows variant selector for `A` (#800).
- * Refine the shape of Slab `S` and `s` to add serifs at both terminals (#800).
+   - Variants of percent (`%`) sign are renamed.
+ * Add Characters:
+     * Z Notation Schema Composition (`U+2A1F`) and Z Notation Relation Composition (`U+2A3E`) (#857).
+     * Circled Zero With Slash (`U+1F10D`, #861).
+     * Ballot Box, Ballot Box with Check and Ballot Box with X (`U+2610` ... `U+2612`, #890).
+ * Add Variants:
+     * Add diagonal-tailed variants for `f`, `i`, `j`, `k`, `l`, `q`, `t` (#795).
+     * Add motion-serifed variants for `A`, `B`, `D`, `E`, `F`, `H`, `K`, `M`, `N`, `P`, `R`, `T`, `V`, `W`, `X`, `Y`, `Z`, `v`, `w`, `x`, `y`, `z` (#806, #815, #818).
+     * Add symmetric-legged variants for `K` and `k` (#807).
+     * Add horizontal-tailed and detach-tailed variants for `Q` (#808).
+     * Add hook-less and capped variants for `G` (#809).
+     * Add open-contour variants for `P` and `R` (#810).
+     * Add standing variants for `R` (#810).
+     * Add toothed and motion-serifed variants for `U` (#811).
+     * Add double-v and asymmetric variants for `W` and `w` (#812).
+     * Add motion-serifed toothless variants for `u` (#813).
+     * Add flat-serifed variants for `1` (#819).
+     * Add serifed and top-serifed variants for `S` and `s` (#800, #822).
+     * Add oblique-upper-left-bar variant for `5` (#820).
+     * Add compact-serifed and compact-top-serifed variants of `r` (#826).
+     * Add oval variant for `0` (#828).
+     * Add corner and flat-hooked variants for `?` (#829).
+     * Add oval slashed / dotted variants for `0` (#834).
+     * Add rings-continuous-slash-also-connected variant to `%` (#835).
+     * Add inward-serifed variants for `C`, `G`, `S`, `c` (#837).
+     * Add asymmetric variants for `N` (#838).
+     * Add base-serifed variants for `Y` (#850).
+     * Add base-serifed variants for `r` (#851).
+     * Add bar-interrupted variants for Dollar and Cent sign (#863).
+     * Add Hooky variant for `j` (#864).
+     * Add bend and curly variants for `7` (#866).
+     * Add interrupted variants for `B` (#869).
+     * Add variant selectors for Greek lower Alpha and Iota (#873).
+     * Add tail to Greek lower Pi and Tau (#875).
+     * Add compact/descending variants for `J` (#876).
+     * Add cursive `v` and `w`.
+     * Add straight-bar AE (`Æ`), follows variant selector for `A` (#800).
+ * Add IBM Plex Mono, PT Mono and Recursive Mono stylistic sets (#796, #855).
+ * Fix width of flat-hook-serifless `j` (#860).
  * Fix broken shape of tailed Cyrillic DJE (`U+0452`, #803).
  * Slightly increase size of `⊂`, `⊃`, `⊏` and `⊐` for better distinction (#804).
 

@@ -108,9 +108,7 @@ glyph-block Symbol-Math-Relation : begin
 		include : refer-glyph "xhDot"
 
 		local delta : Math.max 0 : Width / 2 - DotRadius - SB * ColonEqSbSquash
-		include : Upright
-		include : Translate (+delta) (SymbolMid - XH / 2)
-		include : Italify
+		include : ApparentTranslate (+delta) (SymbolMid - XH / 2)
 
 		include : EqualShape (SB * ColonEqSbSquash) (RightSB - DotSize)
 
@@ -119,9 +117,7 @@ glyph-block Symbol-Math-Relation : begin
 		include : refer-glyph "xhDot"
 
 		local delta : Math.max 0 : Width / 2 - DotRadius - SB * ColonEqSbSquash
-		include : Upright
-		include : Translate (-delta) (SymbolMid - XH / 2)
-		include : Italify
+		include : ApparentTranslate (-delta) (SymbolMid - XH / 2)
 
 	create-glyph 'colonEq' 0x2254 : glyph-proc
 		include : ColonEqColonShape
@@ -241,6 +237,8 @@ glyph-block Symbol-Math-Relation : begin
 				Rect ([mix top bot 0.5] + gap / 2) ([mix top bot 0.5] - gap / 2) (l + O) (r - O)
 
 	define [NormalSupersetShape top bot l r s] : LigationGreaterShape top bot l r s s 0
+
+
 
 	# Sym parameters
 	local approxDist : EqualHalfSpace * 1.75
@@ -454,6 +452,34 @@ glyph-block Symbol-Math-Relation : begin
 	turned 'turnSucceedsEqSlant' 0x22DE 'succeedsEqSlant' Middle SymbolMid
 	turned 'turnPrecedesEqSlant' 0x22DF 'precedesEqSlant' Middle SymbolMid
 
+
+	define [PrecedesUnderRelationShape t b l r s] : glyph-proc
+		local yBias : s * 0.375
+		local fine : s * CThin
+		local hookDepth : Math.max ((r - l) / 4) (s * 2)
+		local hookWidth : Math.max ((t - b) / 6) (s * 1.25)
+		include : dispiro
+			straight.right.start (r - hookDepth) (t - O + yBias) [widths.rhs.heading s Rightward]
+			archv
+			g4.down.mid r (t - hookWidth + yBias) [heading Downward]
+			arcvh
+			straight.left.end l ([mix t b 0.5] + s / 2 - fine) [widths.rhs.heading fine Leftward]
+		include : dispiro
+			straight.right.start (r - hookDepth) (b + O - yBias) [widths.lhs.heading s Rightward]
+			archv
+			g4.up.mid   r (b + hookWidth - yBias) [heading Upward]
+			arcvh
+			straight.left.end l ([mix t b 0.5] - s / 2 + fine) [widths.lhs.heading fine Leftward]
+
+	define [SucceedsUnderRelationShape t b l r s] : new-glyph : glyph-proc
+		include : PrecedesUnderRelationShape t b l r s
+		include : FlipAround [mix l r 0.5] [mix t b 0.5]
+
+	create-glyph 'precedesUnderRelation' 0x22B0 : AsRadical : PrecedesUnderRelationShape (SymbolMid + dH) (SymbolMid - dH) SB RightSB OperatorStroke
+	create-glyph 'succeedsUnderRelation' 0x22B1 : AsRadical : SucceedsUnderRelationShape (SymbolMid + dH) (SymbolMid - dH) SB RightSB OperatorStroke
+
+
+
 	create-glyph 'sym' 0x223C : symWave SymbolMid 1
 	create-glyph 'flipSym' 0x223D : symWave SymbolMid (-1)
 
@@ -467,24 +493,18 @@ glyph-block Symbol-Math-Relation : begin
 
 	create-glyph 'barSym' 0x2242 : glyph-proc
 		include [refer-glyph 'sym'] AS_BASE
-		include : Upright
-		include : Translate 0 (-approxDist / 2)
-		include : Italify
+		include : ApparentTranslate 0 (-approxDist / 2)
 		include : HBar SB RightSB (SymbolMid + approxDist / 2) OperatorStroke
 
 	create-glyph 'symEq' 0x2243 : glyph-proc
 		include [refer-glyph 'sym'] AS_BASE
-		include : Upright
-		include : Translate 0 (approxDist / 2)
-		include : Italify
+		include : ApparentTranslate 0 (approxDist / 2)
 		include : HBar SB RightSB (SymbolMid - approxDist / 2) OperatorStroke
 
 	create-glyph 'symEqEq' 0x2245 : glyph-proc
 		local sympShift : approxDist + EqualHalfSpace * 1.5
 		include [refer-glyph 'sym'] AS_BASE
-		include : Upright
-		include : Translate 0 (sympShift / 2)
-		include : Italify
+		include : ApparentTranslate 0 (sympShift / 2)
 		include : HBar SB RightSB (SymbolMid - sympShift / 2 + EqualHalfSpace * 1.5) OperatorStroke
 		include : HBar SB RightSB (SymbolMid - sympShift / 2) OperatorStroke
 
@@ -494,17 +514,13 @@ glyph-block Symbol-Math-Relation : begin
 
 	create-glyph 'flipSymEq' 0x22CD : glyph-proc
 		include [refer-glyph 'flipSym'] AS_BASE
-		include : Upright
-		include : Translate 0 (approxDist / 2)
-		include : Italify
+		include : ApparentTranslate 0 (approxDist / 2)
 		include : HBar SB RightSB (SymbolMid - approxDist / 2) OperatorStroke
 
 	create-glyph 'flipSymEqEq' 0x224C : glyph-proc
 		local sympShift : approxDist + EqualHalfSpace * 1.5
 		include [refer-glyph 'flipSym'] AS_BASE
-		include : Upright
-		include : Translate 0 (sympShift / 2)
-		include : Italify
+		include : ApparentTranslate 0 (sympShift / 2)
 		include : HBar SB RightSB (SymbolMid - sympShift / 2 + EqualHalfSpace * 1.5) OperatorStroke
 		include : HBar SB RightSB (SymbolMid - sympShift / 2) OperatorStroke
 
