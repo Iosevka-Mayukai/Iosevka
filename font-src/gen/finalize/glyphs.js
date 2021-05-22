@@ -1,30 +1,25 @@
 "use strict";
 
 const TypoGeom = require("typo-geom");
+const Geom = require("../../support/geometry");
 const Point = require("../../support/point");
+const Transform = require("../../support/transform");
 const CurveUtil = require("../../support/curve-util");
 const util = require("util");
 
 module.exports = finalizeGlyphs;
-function finalizeGlyphs(para, glyphStore) {
+function finalizeGlyphs(cache, para, glyphStore) {
 	const skew = Math.tan(((para.slopeAngle || 0) / 180) * Math.PI);
-	regulateGlyphStore(skew, glyphStore);
+	regulateGlyphStore(cache, skew, glyphStore);
 	return glyphStore;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-function regulateGlyphStore(skew, glyphStore) {
+function regulateGlyphStore(cache, skew, glyphStore) {
 	for (const g of glyphStore.glyphs()) {
 		if (g.geometry.isEmpty()) continue;
-		if (!regulateCompositeGlyph(glyphStore, g)) {
-			const cs = g.geometry.asContours();
-			g.clearGeometry();
-			g.includeContours(cs, 0, 0);
-		}
-	}
-	for (const g of glyphStore.glyphs()) {
-		if (!g.geometry.asReferences()) regulateSimpleGlyph(g, skew);
+		if (!regulateCompositeGlyph(glyphStore, g)) flattenSimpleGlyph(cache, skew, g);
 	}
 }
 
@@ -40,33 +35,67 @@ function regulateCompositeGlyph(glyphStore, g) {
 	return true;
 }
 
-function regulateSimpleGlyph(g, skew) {
-	let cs = g.geometry.asContours();
-	for (const contour of cs) for (const z of contour) z.x -= z.y * skew;
-	cs = simplifyContours(cs);
-	for (const contour of cs) for (const z of contour) z.x += z.y * skew;
-
-	g.clearGeometry();
-	g.includeContours(cs, 0, 0);
+function flattenSimpleGlyph(cache, skew, g) {
+	const ck = Geom.hashGeometry(g.geometry);
+	const cached = cache.getGF(ck);
+	if (ck && cached) {
+		g.clearGeometry();
+		g.includeContours(CurveUtil.repToShape(cached), 0, 0);
+		cache.refreshGF(ck);
+	} else {
+		const tfBack = new Transform(1, -skew, 0, 1, 0, 0);
+		const tfForward = new Transform(1, +skew, 0, 1, 0, 0);
+		const g1 = new Geom.TransformedGeometry(
+			new SimplifyGeometry(new Geom.TransformedGeometry(g.geometry, tfBack)),
+			tfForward
+		);
+		const cs = g1.asContours();
+		g.clearGeometry();
+		g.includeContours(cs, 0, 0);
+		if (ck) cache.saveGF(ck, CurveUtil.shapeToRep(cs));
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-function simplifyContours(source) {
-	const sink = new FairizedShapeSink();
-	TypoGeom.ShapeConv.transferGenericShape(
-		TypoGeom.Fairize.fairizeBezierShape(
-			TypoGeom.Boolean.removeOverlap(
-				CurveUtil.convertShapeToArcs(source),
-				TypoGeom.Boolean.PolyFillType.pftNonZero,
-				CurveUtil.BOOLE_RESOLUTION
-			)
-		),
-		sink,
-		CurveUtil.GEOMETRY_PRECISION
-	);
-
-	return sink.contours;
+class SimplifyGeometry extends Geom.GeometryBase {
+	constructor(g) {
+		super();
+		this.m_geom = g;
+	}
+	asContours() {
+		const source = this.m_geom.asContours();
+		const sink = new FairizedShapeSink();
+		TypoGeom.ShapeConv.transferGenericShape(
+			TypoGeom.Fairize.fairizeBezierShape(
+				TypoGeom.Boolean.removeOverlap(
+					CurveUtil.convertShapeToArcs(source),
+					TypoGeom.Boolean.PolyFillType.pftNonZero,
+					CurveUtil.BOOLE_RESOLUTION
+				)
+			),
+			sink,
+			CurveUtil.GEOMETRY_PRECISION
+		);
+		return sink.contours;
+	}
+	asReferences() {
+		return null;
+	}
+	filterTag(fn) {
+		return this.m_geom.filterTag(fn);
+	}
+	isEmpty() {
+		return this.m_geom.isEmpty();
+	}
+	measureComplexity() {
+		return this.m_geom.measureComplexity();
+	}
+	toShapeStringOrNull() {
+		const sTarget = this.m_geom.toShapeStringOrNull();
+		if (!sTarget) return null;
+		return `SimplifyGeometry{${sTarget}}`;
+	}
 }
 
 class FairizedShapeSink {

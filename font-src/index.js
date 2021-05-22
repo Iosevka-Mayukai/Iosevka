@@ -3,6 +3,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 const zlib = require("zlib");
+const { encode } = require("@msgpack/msgpack");
 
 const { FontIo } = require("ot-builder");
 const Toml = require("@iarna/toml");
@@ -15,7 +16,7 @@ const { createGrDisplaySheet } = require("./support/gr");
 
 module.exports = async function main(argv) {
 	const paraT = await getParameters();
-	const { font, glyphStore } = BuildFont(paraT(argv));
+	const { font, glyphStore } = await BuildFont(argv, paraT(argv));
 	if (argv.oCharMap) await saveCharMap(argv, glyphStore);
 	if (argv.o) await saveTTF(argv, font);
 };
@@ -97,5 +98,5 @@ async function saveCharMap(argv, glyphStore) {
 			...createGrDisplaySheet(glyphStore, gn)
 		]);
 	}
-	await fs.writeFile(argv.oCharMap, zlib.gzipSync(Buffer.from(JSON.stringify(charMap), "utf-8")));
+	await fs.writeFile(argv.oCharMap, zlib.gzipSync(encode(charMap)));
 }

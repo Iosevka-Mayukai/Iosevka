@@ -19,7 +19,7 @@ Quit your editor/program. Unzip and open the folder.
   *  Search for other variants using `brew search font-iosevka` and install what you want.
   * Customizable install using Homebrew: see [robertgzr/homebrew-tap](https://github.com/robertgzr/homebrew-tap).
 * **Linux** : Copy the TTF files to your fonts directory → Run `sudo fc-cache`. 
-  - Arch Linux users can install the font from the AUR [here](https://aur.archlinux.org/packages/ttf-iosevka) using an AUR wrapper or by doing it manually. [All variants](https://aur.archlinux.org/packages/?O=0&SeB=nd&K=ttf-iosevka&SB=n&SO=a&PP=50&do_Search=Go).
+  - Arch Linux users can install one of the [ttc-iosevka packages](https://archlinux.org/packages/?q=ttc-iosevka).
   - Void Linux users can install the font with `xbps-install font-iosevka`.
   - Fedora Linux users can install the font(s) from the copr [here](https://copr.fedorainfracloud.org/coprs/peterwu/iosevka/). Run `dnf search iosevka` to discover available fonts and `dnf install` to install the chosen one(s).
 * **FreeBSD**: The font can be installed with `pkg install iosevka`.
@@ -27,7 +27,7 @@ Quit your editor/program. Unzip and open the folder.
 
 ## Features
 
-In the official package, Iosevka provides 6 monospace subfamilies and 3 quasi-proportional subfamilies. In all the monospace subfamilies, 9 weights (Thin to Heavy), 2 widths (Normal and Extended), and 3 slopes (Upright, Italic and Oblique) are included. In the quasi-proportional subfamilies, the quantity of widths is reduced to 1.
+In the official package, Iosevka provides 6 monospace subfamilies (sans-serif and slab-serif, each in the 3 spacings Default, Term and Fixed) and 2 quasi-proportional subfamilies (Aile (sans-serif) and Etoile (slab-serif)). In all the monospace subfamilies, 9 weights (Thin to Heavy), 2 widths (Normal and Extended), and 3 slopes (Upright, Italic and Oblique) are included. In the quasi-proportional subfamilies, the quantity of widths is reduced to 1.
 
 ![Weights sample](images/weights.png)
 
@@ -38,9 +38,9 @@ All versions include the same ranges of characters: Latin letters, Greek letters
 <!-- BEGIN Section-Language-List -->
 <!-- THIS SECTION IS AUTOMATICALLY GENERATED. DO NOT EDIT. -->
 
-160 Supported Languages: 
+161 Supported Languages: 
 
-Afrikaans, Aghem, Akan, Albanian, Asturian, Asu, Azerbaijani, Bafia, Bambara, Basaa, Basque, Belarusian, Bemba, Bena, Bosnian, Breton, Bulgarian, Catalan, Cebuano, Central Atlas Tamazight, Chechen, Chiga, Colognian, Cornish, Croatian, Czech, Danish, Duala, Dutch, Embu, English, Esperanto, Estonian, Ewe, Ewondo, Faroese, Filipino, Finnish, French, Friulian, Fulah, Galician, Ganda, German, Greek, Gusii, Hausa, Hawaiian, Hungarian, Icelandic, Igbo, Inari Sami, Indonesian, Interlingua, Irish, Italian, Javanese, Jola-Fonyi, Kabuverdianu, Kabyle, Kako, Kalaallisut, Kalenjin, Kamba, Kazakh, Kikuyu, Kinyarwanda, Koyra Chiini, Koyraboro Senni, Kurdish, Kwasio, Kyrgyz, Lakota, Langi, Latvian, Lingala, Lithuanian, Low German, Lower Sorbian, Luba-Katanga, Luo, Luxembourgish, Luyia, Macedonian, Machame, Makhuwa-Meetto, Makonde, Malagasy, Malay, Maltese, Manx, Maori, Masai, Meru, Metaʼ, Mongolian, Morisyen, Mundang, Nama, Ngiemboon, Nigerian Pidgin, North Ndebele, Northern Sami, Norwegian Bokmål, Norwegian Nynorsk, Nuer, Nyankole, Oromo, Ossetic, Polish, Portuguese, Quechua, Romanian, Romansh, Rombo, Rundi, Russian, Rwa, Sakha, Samburu, Sango, Sangu, Scottish Gaelic, Sena, Serbian, Shambala, Shona, Slovak, Slovenian, Soga, Somali, Spanish, Sundanese, Swahili, Swedish, Swiss German, Tachelhit (shi_latn), Taita, Tajik, Tasawaq, Tatar, Teso, Tongan, Turkish, Turkmen, Ukrainian, Upper Sorbian, Uzbek, Vai (vai_latn), Vietnamese, Vunjo, Walser, Welsh, Western Frisian, Wolof, Xhosa, Yangben, Yoruba, Zarma, Zulu
+Afrikaans, Aghem, Akan, Albanian, Asturian, Asu, Azerbaijani, Bafia, Bambara, Basaa, Basque, Belarusian, Bemba, Bena, Bosnian, Breton, Bulgarian, Catalan, Cebuano, Central Atlas Tamazight, Chechen, Chiga, Colognian, Cornish, Croatian, Czech, Danish, Duala, Dutch, Embu, English, Esperanto, Estonian, Ewe, Ewondo, Faroese, Filipino, Finnish, French, Friulian, Fulah, Galician, Ganda, German, Greek, Gusii, Hausa, Hawaiian, Hungarian, Icelandic, Igbo, Inari Sami, Indonesian, Interlingua, Irish, Italian, Javanese, Jola-Fonyi, Kabuverdianu, Kabyle, Kako, Kalaallisut, Kalenjin, Kamba, Kazakh, Kikuyu, Kinyarwanda, Koyra Chiini, Koyraboro Senni, Kurdish, Kwasio, Kyrgyz, Lakota, Langi, Latvian, Lingala, Lithuanian, Low German, Lower Sorbian, Luba-Katanga, Luo, Luxembourgish, Luyia, Macedonian, Machame, Makhuwa-Meetto, Makonde, Malagasy, Malay, Maltese, Manx, Maori, Masai, Meru, Metaʼ, Mongolian, Morisyen, Mundang, Nama, Ngiemboon, Nigerian Pidgin, North Ndebele, Northern Sami, Norwegian, Norwegian Bokmål, Norwegian Nynorsk, Nuer, Nyankole, Oromo, Ossetic, Polish, Portuguese, Quechua, Romanian, Romansh, Rombo, Rundi, Russian, Rwa, Sakha, Samburu, Sango, Sangu, Scottish Gaelic, Sena, Serbian, Shambala, Shona, Slovak, Slovenian, Soga, Somali, Spanish, Sundanese, Swahili, Swedish, Swiss German, Tachelhit (shi_latn), Taita, Tajik, Tasawaq, Tatar, Teso, Tongan, Turkish, Turkmen, Ukrainian, Upper Sorbian, Uzbek, Vai (vai_latn), Vietnamese, Vunjo, Walser, Welsh, Western Frisian, Wolof, Xhosa, Yangben, Yoruba, Zarma, Zulu
 
 <!-- END Section-Language-List -->
 
@@ -202,7 +202,7 @@ Monospace Iosevka contains various stylistic sets to change the shape of certain
 
 ### Character Variants
 
-Alongside stylistic sets, Monospace Iosevka can also be configured to cherry-pick variants for each character using OpenType. The variants are shown below. To enable, assign the feature tag to the variant index. For example, setting `cv11` to `2` will enable single-storey `a`.
+Alongside stylistic sets, Monospace Iosevka can also be configured to cherry-pick variants for each character using OpenType. The variants are shown below. To enable, assign the feature tag to the variant index. For example, setting `cv26` to `6` will enable single-storey `a`.
 
 **Caution :**  Certain software may limit the quantity of OpenType features and drop some of them if the feature list is too long. Please validate your feature configuration to ensure that it worked in your software.
 
@@ -924,20 +924,20 @@ Subsection `variants` is used to configure character variants in the font. Prope
     + `s = 'bilateral-inward-serifed'`, `cv43 = 5`: `s` with inward serifs at both end.
   - Styles for `t`:
     + `t = 'standard'`, `cv44 = 1`: Standard `t` shape.
-    + `t = 'cross'`, `cv44 = 2`: Futura-like `t` shape.
-    + `t = 'flat-hook'`, `cv44 = 3`: `t` with flat hook.
-    + `t = 'hookless-asymmetric'`, `cv44 = 4`: `t` without hook and with ony half the cross bar.
-    + `t = 'flat-hook-short-neck'`, `cv44 = 5`: `t` with flat hook and a slightly shorter neck.
-    + `t = 'flat-hook-short-neck2'`, `cv44 = 6`: `t` with flat hook and a more shorter neck.
-    + `t = 'diagonal-tailed'`, `cv44 = 7`: `t` with diagonal tail.
-    + `t = 'standard-short-neck'`, `cv44 = 8`: Standard `t` shape with a shorter neck.
+    + `t = 'flat-hook'`, `cv44 = 2`: `t` with flat hook.
+    + `t = 'diagonal-tailed'`, `cv44 = 3`: `t` with diagonal tail.
+    + `t = 'cross'`, `cv44 = 4`: Futura-like `t` shape.
+    + `t = 'hookless-asymmetric'`, `cv44 = 5`: `t` without hook and with ony half the cross bar.
+    + `t = 'standard-short-neck'`, `cv44 = 6`: Standard `t` shape with a shorter neck.
+    + `t = 'flat-hook-short-neck'`, `cv44 = 7`: `t` with flat hook and a slightly shorter neck.
+    + `t = 'diagonal-tailed-short-neck'`, `cv44 = 8`: `t` with diagonal tail and a shorter neck.
     + `t = 'cross-short-neck'`, `cv44 = 9`: Futura-like `t` shape with a shorter neck.
     + `t = 'hookless-asymmetric-short-neck'`, `cv44 = 10`: `t` without hook, with ony half the cross bar and a shorter neck.
-    + `t = 'diagonal-tailed-short-neck'`, `cv44 = 11`: `t` with diagonal tail and a shorter neck.
-    + `t = 'standard-short-neck2'`, `cv44 = 12`: Standard `t` shape with a more shorter neck.
-    + `t = 'cross-short-neck2'`, `cv44 = 13`: Futura-like `t` shape with a more shorter neck.
-    + `t = 'hookless-asymmetric-short-neck2'`, `cv44 = 14`: `t` without hook, with ony half the cross bar and a more shorter neck.
-    + `t = 'diagonal-tailed-short-neck2'`, `cv44 = 15`: `t` with diagonal tail and a more shorter neck.
+    + `t = 'standard-short-neck2'`, `cv44 = 11`: Standard `t` shape with a more shorter neck.
+    + `t = 'flat-hook-short-neck2'`, `cv44 = 12`: `t` with flat hook and a more shorter neck.
+    + `t = 'diagonal-tailed-short-neck2'`, `cv44 = 13`: `t` with diagonal tail and a more shorter neck.
+    + `t = 'cross-short-neck2'`, `cv44 = 14`: Futura-like `t` shape with a more shorter neck.
+    + `t = 'hookless-asymmetric-short-neck2'`, `cv44 = 15`: `t` without hook, with ony half the cross bar and a more shorter neck.
   - Styles for `u`:
     + `u = 'toothed'`, `cv45 = 1`: Normal `u` with bottom-right tooth.
     + `u = 'toothless-corner'`, `cv45 = 2`: Toothless (corner bottom-right) `u`.
@@ -1109,7 +1109,7 @@ Subsection `variants` is used to configure character variants in the font. Prope
     + `four = 'open-non-crossing'`, `cv66 = 6`: `4` with open contour but the horizontal bar does not overflow the vertical bar.
   - Styles for `5`:
     + `five = 'vertical-upper-left-bar'`, `cv67 = 1`: `5` with a vertical upper-left bar.
-    + `five = 'oblique-upper-left-bar'`, `cv67 = 2`: `5` with a more open contour.
+    + `five = 'oblique-upper-left-bar'`, `cv67 = 2`: `5` with an oblique upper-left bar.
   - Styles for `6`:
     + `six = 'closed-contour'`, `cv68 = 1`: `6` with a more closed contour.
     + `six = 'open-contour'`, `cv68 = 2`: `6` with a more open contour.
@@ -1139,12 +1139,14 @@ Subsection `variants` is used to configure character variants in the font. Prope
     + `tilde = 'high'`, `cv72 = 1`: Higher tilde `~`.
     + `tilde = 'low'`, `cv72 = 2`: Lower tilde `~`.
   - Styles for `*`:
-    + `asterisk = 'high'`, `cv73 = 1`: Higher five-pointed asterisk `*`.
-    + `asterisk = 'low'`, `cv73 = 2`: Lower five-pointed asterisk `*`.
-    + `asterisk = 'hex-high'`, `cv73 = 3`: Higher six-pointed asterisk `*`.
-    + `asterisk = 'hex-low'`, `cv73 = 4`: Lower six-pointed asterisk `*`.
-    + `asterisk = 'flip-penta-high'`, `cv73 = 5`: Higher five-pointed and turned asterisk `*`.
-    + `asterisk = 'flip-penta-low'`, `cv73 = 6`: Lower five-pointed and turned asterisk `*`.
+    + `asterisk = 'penta-high'`, `cv73 = 1`: Higher five-pointed asterisk `*`.
+    + `asterisk = 'penta-low'`, `cv73 = 2`: Lower five-pointed asterisk `*`.
+    + `asterisk = 'flip-penta-high'`, `cv73 = 3`: Higher five-pointed and turned asterisk `*`.
+    + `asterisk = 'flip-penta-low'`, `cv73 = 4`: Lower five-pointed and turned asterisk `*`.
+    + `asterisk = 'hex-high'`, `cv73 = 5`: Higher six-pointed asterisk `*`.
+    + `asterisk = 'hex-low'`, `cv73 = 6`: Lower six-pointed asterisk `*`.
+    + `asterisk = 'turn-hex-high'`, `cv73 = 7`: Higher turned six-pointed asterisk `*`.
+    + `asterisk = 'turn-hex-low'`, `cv73 = 8`: Lower turned six-pointed asterisk `*`.
   - Styles for `_`:
     + `underscore = 'above-baseline'`, `cv74 = 1`: Extra-high `_`, placed right below baseline.
     + `underscore = 'high'`, `cv74 = 2`: Higher underscore `_`, placed right below baseline.

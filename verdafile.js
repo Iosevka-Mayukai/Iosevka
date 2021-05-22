@@ -276,15 +276,22 @@ const DistUnhintedTTF = file.make(
 	async (target, out, gr, fn) => {
 		await target.need(Scripts, Parameters, Dependencies);
 		const charMapDir = `${BUILD}/ttf/${gr}`;
-		const charMapPath = `${charMapDir}/${fn}.cm.gz`;
+		const charMapPath = `${charMapDir}/${fn}.charmap.mpz`;
+		const cachePath = `${charMapDir}/${fn}.cache.mpz`;
+
 		const [fi] = await target.need(FontInfoOf(fn), de(out.dir), de(charMapDir));
 		echo.action(echo.hl.command(`Create TTF`), fn, echo.hl.operator("->"), out.full);
-		await silently.node("font-src/index", { o: out.full, oCharMap: charMapPath, ...fi });
+		await silently.node("font-src/index", {
+			o: out.full,
+			oCharMap: charMapPath,
+			oCache: cachePath,
+			...fi
+		});
 	}
 );
 
 const BuildCM = file.make(
-	(gr, f) => `${BUILD}/ttf/${gr}/${f}.cm.gz`,
+	(gr, f) => `${BUILD}/ttf/${gr}/${f}.charmap.mpz`,
 	async (target, output, gr, f) => {
 		await target.need(DistUnhintedTTF(gr, f));
 	}
